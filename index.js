@@ -1,3 +1,6 @@
+/**
+ * Constants to avoid repeated code
+ */
 const CONSTANTS = {
     LEVELS: {
         CAR: "car-level",
@@ -9,6 +12,12 @@ const CONSTANTS = {
     },
 };
 
+/**
+ * Takes in a percent, and returns the numerical value of that percentage of the vh
+ *
+ * @param {number} percent - The percent of vh we want to return
+ * @returns The vh amount, so 50vh will return the number equivalent of 50vh
+ */
 const vh = (percent) => {
     const h = Math.max(
         document.documentElement.clientHeight,
@@ -17,6 +26,12 @@ const vh = (percent) => {
     return (percent * h) / 100;
 };
 
+/**
+ * Takes in a percent, and returns the numerical value of that percentage of vw
+ *
+ * @param {number} percent - The percent of vw we want to return
+ * @returns The vw amount, so 50vw will return the number equivalent of 50vw
+ */
 const vw = (percent) => {
     const w = Math.max(
         document.documentElement.clientWidth,
