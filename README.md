@@ -29,4 +29,4 @@ We will be implementing the game Frogger, utilizing a static html page with DOM 
 
 ---
 
-> Contributors: Cameron Thacker, Treavien Holley, Macy Beach, Alma Rojas
+> Contributors: Cameron Thacker, Treavien Holley, Macy Beach, Alma Rojas, Kush Patel
