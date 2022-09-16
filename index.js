@@ -3,10 +3,10 @@
  */
 const CONSTANTS = {
     LEVELS: {
-        CAR: "car-level",
+        ROAD: "road-level",
         END: "end-level",
         FROG_ID: "frog",
-        LILYPAD: "lilypad-level",
+        BOARDWALK: "boardwalk-level",
         LOG: "log-level",
         START: "start-level",
     },
@@ -55,8 +55,8 @@ const getRandomInt = (min, max) =>
  */
 const levelIds = [
     CONSTANTS.LEVELS.LOG,
-    CONSTANTS.LEVELS.CAR,
-    CONSTANTS.LEVELS.LILYPAD,
+    CONSTANTS.LEVELS.ROAD,
+    CONSTANTS.LEVELS.BOARDWALK,
 ];
 
 /**
