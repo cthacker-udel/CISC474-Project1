@@ -131,6 +131,7 @@ window.onkeydown = (keyEvent) => {
                 frog.style.bottom = `${previousBottom + 5}%`;
             } else if (frog.style.bottom === "95%") {
                 frog.style.bottom = "97%";
+                incrementScore();
             }
             break;
         }
@@ -176,6 +177,16 @@ const createFrog = () => {
     frog.style.backgroundColor = "red";
     return frog;
 };
+
+/**
+ * Increments the score element by 1 each time the frog reachs the top of the level
+ */
+const incrementScore = () => {
+    const scoreSpan = document.getElementById("score");
+    const scoreStr = scoreSpan.innerText;
+    var score = parseInt(scoreStr) + 1
+    scoreSpan.innerText = score
+}
 
 // #region Creating Levels
 
