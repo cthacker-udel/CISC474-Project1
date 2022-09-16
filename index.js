@@ -199,7 +199,7 @@ const createStartLevel = () => {
  */
 const createEndLevel = () => {
     const endLevel = document.createElement("img");
-    endLevel.setAttribute('src', 'images/lilypads.png');
+    endLevel.setAttribute('src', 'images/end.png');
     endLevel.id = CONSTANTS.LEVELS.END;
     endLevel.innerHTML = endLevel.id;
     return endLevel;
@@ -212,7 +212,7 @@ const createEndLevel = () => {
  * @returns The created level
  */
 const createLevel = (id) => {
-    const level = document.createElement("div");
+    const level = document.createElement("img");
     level.id = id;
     level.innerHTML = id;
     return level;
