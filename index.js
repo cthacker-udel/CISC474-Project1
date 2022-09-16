@@ -64,7 +64,7 @@ const levelIds = [
  */
 window.onload = () => {
     const froggerContainer = document.getElementById("frogger-container");
-    const levelAmount = getRandomInt(5, 8);
+    const levelAmount = getRandomInt(10, 15);
     froggerContainer.appendChild(createEndLevel());
     for (i = 0; i < levelAmount; i++) {
         const levelType = getRandomInt(0, 3);
@@ -166,14 +166,14 @@ window.onkeydown = (keyEvent) => {
  * @returns Frog element
  */
 const createFrog = () => {
-    const frog = document.createElement("div");
+    const frog = document.createElement("img");
+    frog.setAttribute('src', 'images/frog.png');
     frog.className = "position-absolute";
     frog.id = CONSTANTS.LEVELS.FROG_ID;
-    frog.style.height = "2.95vh";
-    frog.style.width = "2.95vw";
+    frog.style.height = "4.95vh";
+    frog.style.width = "4.95vw";
     frog.style.right = "50%";
-    frog.style.bottom = "0%";
-    frog.style.backgroundColor = "red";
+    frog.style.bottom = "1%";
     return frog;
 };
 
@@ -185,7 +185,8 @@ const createFrog = () => {
  * @returns The start level
  */
 const createStartLevel = () => {
-    const startLevel = document.createElement("div");
+    const startLevel = document.createElement("img");
+    startLevel.setAttribute('src', 'images/sidewalk.png');
     startLevel.id = CONSTANTS.LEVELS.START;
     startLevel.innerHTML = startLevel.id;
     return startLevel;
@@ -197,7 +198,8 @@ const createStartLevel = () => {
  * @returns The end level
  */
 const createEndLevel = () => {
-    const endLevel = document.createElement("div");
+    const endLevel = document.createElement("img");
+    endLevel.setAttribute('src', 'images/lilypads.png');
     endLevel.id = CONSTANTS.LEVELS.END;
     endLevel.innerHTML = endLevel.id;
     return endLevel;
