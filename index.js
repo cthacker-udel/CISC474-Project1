@@ -7,7 +7,7 @@ const CONSTANTS = {
         END: "end-level",
         FROG_ID: "frog",
         BOARDWALK: "boardwalk-level",
-        LOG: "log-level",
+        WATER: "water-level",
         START: "start-level",
     },
 };
@@ -54,7 +54,7 @@ const getRandomInt = (min, max) =>
  * The ids for each level
  */
 const levelIds = [
-    CONSTANTS.LEVELS.LOG,
+    CONSTANTS.LEVELS.WATER,
     CONSTANTS.LEVELS.ROAD,
     CONSTANTS.LEVELS.BOARDWALK,
 ];
