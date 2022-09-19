@@ -5,10 +5,13 @@ const CONSTANTS = {
     LEVELS: {
         CAR: "car-level",
         END: "end-level",
-        FROG_ID: "frog",
         LILYPAD: "lilypad-level",
         LOG: "log-level",
         START: "start-level",
+    },
+    OBJECTS: {
+        FROG_ID: "frog",
+        LOG_ID: "log",    
     },
 };
 
@@ -168,7 +171,7 @@ window.onkeydown = (keyEvent) => {
 const createFrog = () => {
     const frog = document.createElement("div");
     frog.className = "position-absolute";
-    frog.id = CONSTANTS.LEVELS.FROG_ID;
+    frog.id = CONSTANTS.OBJECTS.FROG_ID;
     frog.style.height = "2.95vh";
     frog.style.width = "2.95vw";
     frog.style.right = "50%";
@@ -217,3 +220,15 @@ const createLevel = (id) => {
 };
 
 // #endregion
+
+
+// create a moving log
+const createLogs = () => {
+    const log = document.createElement("div");
+    log.className = "position-absolute";
+    log.id = CONSTANTS.OBJECTS.LOG_ID;
+    log.style.height = "2.95vh";
+    log.style.width = "5.95vw";
+    log.style.background = "brown";
+    return log;
+};
