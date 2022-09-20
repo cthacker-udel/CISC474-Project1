@@ -3,10 +3,12 @@
  */
 const CONSTANTS = {
     LEVELS: {
-        CAR: "car-level",
+        ROAD: "road-level",
         END: "end-level",
         LILYPAD: "lilypad-level",
         LOG: "log-level",
+        BOARDWALK: "boardwalk-level",
+        WATER: "water-level",
         START: "start-level",
     },
     OBJECTS: {
@@ -57,9 +59,9 @@ const getRandomInt = (min, max) =>
  * The ids for each level
  */
 const levelIds = [
-    CONSTANTS.LEVELS.LOG,
-    CONSTANTS.LEVELS.CAR,
-    CONSTANTS.LEVELS.LILYPAD,
+    CONSTANTS.LEVELS.WATER,
+    CONSTANTS.LEVELS.ROAD,
+    CONSTANTS.LEVELS.BOARDWALK,
 ];
 
 /**
@@ -67,7 +69,7 @@ const levelIds = [
  */
 window.onload = () => {
     const froggerContainer = document.getElementById("frogger-container");
-    const levelAmount = getRandomInt(5, 8);
+    const levelAmount = getRandomInt(10, 15);
     froggerContainer.appendChild(createEndLevel());
     for (i = 0; i < levelAmount; i++) {
         const levelType = getRandomInt(0, 3);
@@ -169,14 +171,14 @@ window.onkeydown = (keyEvent) => {
  * @returns Frog element
  */
 const createFrog = () => {
-    const frog = document.createElement("div");
+    const frog = document.createElement("img");
+    frog.setAttribute('src', 'images/frog.png');
     frog.className = "position-absolute";
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "2.95vh";
-    frog.style.width = "2.95vw";
+    frog.style.height = "4.95vh";
+    frog.style.width = "4.95vw";
     frog.style.right = "50%";
-    frog.style.bottom = "0%";
-    frog.style.backgroundColor = "red";
+    frog.style.bottom = "1%";
     return frog;
 };
 
@@ -188,7 +190,8 @@ const createFrog = () => {
  * @returns The start level
  */
 const createStartLevel = () => {
-    const startLevel = document.createElement("div");
+    const startLevel = document.createElement("img");
+    startLevel.setAttribute('src', 'images/sidewalk.png');
     startLevel.id = CONSTANTS.LEVELS.START;
     startLevel.innerHTML = startLevel.id;
     return startLevel;
@@ -200,7 +203,8 @@ const createStartLevel = () => {
  * @returns The end level
  */
 const createEndLevel = () => {
-    const endLevel = document.createElement("div");
+    const endLevel = document.createElement("img");
+    endLevel.setAttribute('src', 'images/end.png');
     endLevel.id = CONSTANTS.LEVELS.END;
     endLevel.innerHTML = endLevel.id;
     return endLevel;
@@ -213,7 +217,7 @@ const createEndLevel = () => {
  * @returns The created level
  */
 const createLevel = (id) => {
-    const level = document.createElement("div");
+    const level = document.createElement("img");
     level.id = id;
     level.innerHTML = id;
     return level;
