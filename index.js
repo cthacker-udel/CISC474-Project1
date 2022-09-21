@@ -202,7 +202,7 @@ const createEndrow = () => {
 const createRoadrow = () => {
     const roadrow = document.createElement("img");
     roadrow.setAttribute('src', 'images/road.png');
-    roroadroww.id = CONSTANTS.ROWS.ROAD;
+    roadrow.id = CONSTANTS.ROWS.ROAD;
     roadrow.innerHTML = roadrow.id;
     return roadrow;
 };
