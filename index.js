@@ -206,9 +206,12 @@ const createRoadrow = () => {
     roadrow.innerHTML = roadrow.id;
     return roadrow;
 };
-// #endregion
 
-// create a moving log
+/**
+ * Create a moving log
+ *
+ * @returns Log object
+ */
 const createLogs = () => {
     const log = document.createElement("img");
     log.setAttribute('src', 'images/log.png');
@@ -218,3 +221,8 @@ const createLogs = () => {
     log.style.width = "5.95vw";
     return log;
 };
+
+function startGame() {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+}

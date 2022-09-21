@@ -14,19 +14,13 @@
     </head>
     <script src="./index.js"></script>
     <body>
-        <div class="wrapper">
-            <div
-                class="main_container d-flex flex-column"
-                id="end-container">
-            </div>
-            <div
-                class="main_container d-flex flex-column"
-                id="road-container">
-            </div>
-            <div
-                class="main_container d-flex flex-column"
-                id="start-contatiner">
-            </div>
+        <div class="start" id="start-screen">
+            <button type="button" class="btn btn-dark" onClick="startGame()">START</button>
+        </div>
+        <div class="game" d-flex flex-column id="game-screen">
+            <div class="game-row" id="end-container"></div>
+            <div class="game-row" id="road-container"></div>
+            <div class="game-row" id="start-contatiner"></div>
         </div>
     </body>
 </html>
