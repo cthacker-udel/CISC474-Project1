@@ -13,7 +13,7 @@ const CONSTANTS = {
     },
     OBJECTS: {
         FROG_ID: "frog",
-        LOG_ID: "log",    
+        LOG_ID: "log",
     },
 };
 
@@ -228,11 +228,11 @@ const createLevel = (id) => {
 
 // create a moving log
 const createLogs = () => {
-    const log = document.createElement("div");
+    const log = document.createElement("img");
+    log.setAttribute('src', 'images/log.png');
     log.className = "position-absolute";
     log.id = CONSTANTS.OBJECTS.LOG_ID;
     log.style.height = "2.95vh";
     log.style.width = "5.95vw";
-    log.style.background = "brown";
     return log;
 };
