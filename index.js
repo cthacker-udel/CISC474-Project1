@@ -2,14 +2,14 @@
  * Constants to avoid repeated code
  */
 const CONSTANTS = {
-    LEVELS: {
-        ROAD: "road-level",
-        END: "end-level",
-        LILYPAD: "lilypad-level",
-        LOG: "log-level",
-        BOARDWALK: "boardwalk-level",
-        WATER: "water-level",
-        START: "start-level",
+    ROWS: {
+        ROAD: "road-row",
+        END: "end-row",
+        LILYPAD: "lilypad-row",
+        LOG: "log-row",
+        BOARDWALK: "boardwalk-row",
+        WATER: "water-row",
+        START: "start-row",
     },
     OBJECTS: {
         FROG_ID: "frog",
@@ -46,42 +46,26 @@ const vw = (percent) => {
 };
 
 /**
- * Generates a random int between min and max
- *
- * @param {number} min - The min range for the random int, inclusive
- * @param {number} max - The max range for the random int, exclusive
- * @returns - Random integer between min and max
+ * The ids for each row
  */
-const getRandomInt = (min, max) =>
-    Math.floor(Math.random() * (max - min) + min);
-
-/**
- * The ids for each level
- */
-const levelIds = [
-    CONSTANTS.LEVELS.WATER,
-    CONSTANTS.LEVELS.ROAD,
-    CONSTANTS.LEVELS.BOARDWALK,
+const rowIds = [
+    CONSTANTS.ROWS.WATER,
+    CONSTANTS.ROWS.ROAD,
+    CONSTANTS.ROWS.BOARDWALK,
+    CONSTANTS.ROWS.GRASS
 ];
 
 /**
  * Fires when the screen loads
  */
 window.onload = () => {
-    const froggerContainer = document.getElementById("frogger-container");
-    const levelAmount = getRandomInt(10, 15);
-    froggerContainer.appendChild(createEndLevel());
-    for (i = 0; i < levelAmount; i++) {
-        const levelType = getRandomInt(0, 3);
-        froggerContainer.appendChild(createLevel(levelIds[levelType]));
-    }
-    froggerContainer.appendChild(createStartLevel());
-    const childNodesLength = 100.0 / froggerContainer.children.length;
-    [...froggerContainer.children].forEach((eachNode) => {
-        eachNode.style.height = `${childNodesLength}vh`;
-        eachNode.style.width = "100%";
-    });
-    froggerContainer.appendChild(createFrog());
+    const endContainer = document.getElementById("end-container");
+    endContainer.appendChild(createEndrow());
+    const roadContainer = document.getElementById("road-container");
+    roadContainer.appendChild(createRoadrow());
+    const startContainer = document.getElementById("start-container");
+    startContainer.appendChild(createStartrow());
+    startContainer.appendChild(createFrog());
 };
 
 /**
@@ -166,7 +150,7 @@ window.onkeydown = (keyEvent) => {
 };
 
 /**
- * Creates a frog element, and positions it at the beginning of the level
+ * Creates a frog element, and positions it at the beginning of the row
  *
  * @returns Frog element
  */
@@ -182,45 +166,45 @@ const createFrog = () => {
     return frog;
 };
 
-// #region Creating Levels
+// #region Creating ROWS
 
 /**
- * Creates the start level, and returns the html element
+ * Creates the start row, and returns the html element
  *
- * @returns The start level
+ * @returns The start row
  */
-const createStartLevel = () => {
-    const startLevel = document.createElement("img");
-    startLevel.setAttribute('src', 'images/sidewalk.png');
-    startLevel.id = CONSTANTS.LEVELS.START;
-    startLevel.innerHTML = startLevel.id;
-    return startLevel;
+const createStartrow = () => {
+    const startrow = document.createElement("img");
+    startrow.setAttribute('src', 'images/sidewalk.png');
+    startrow.id = CONSTANTS.ROWS.START;
+    startrow.innerHTML = startrow.id;
+    return startrow;
 };
 
 /**
- * Creates the end level, and returns the html element
+ * Creates the end row, and returns the html element
  *
- * @returns The end level
+ * @returns The end row
  */
-const createEndLevel = () => {
-    const endLevel = document.createElement("img");
-    endLevel.setAttribute('src', 'images/end.png');
-    endLevel.id = CONSTANTS.LEVELS.END;
-    endLevel.innerHTML = endLevel.id;
-    return endLevel;
+const createEndrow = () => {
+    const endrow = document.createElement("img");
+    endrow.setAttribute('src', 'images/end.png');
+    endrow.id = CONSTANTS.ROWS.END;
+    endrow.innerHTML = endrow.id;
+    return endrow;
 };
 
 /**
- * Generic function to create a level with the supplied id
+ * Creates the road row
  *
- * @param {string} id - The id of the level
- * @returns The created level
+ * @returns The road row
  */
-const createLevel = (id) => {
-    const level = document.createElement("img");
-    level.id = id;
-    level.innerHTML = id;
-    return level;
+const createRoadrow = () => {
+    const roadrow = document.createElement("img");
+    roadrow.setAttribute('src', 'images/road.png');
+    roroadroww.id = CONSTANTS.ROWS.ROAD;
+    roadrow.innerHTML = roadrow.id;
+    return roadrow;
 };
 // #endregion
 
