@@ -91,7 +91,7 @@ window.onload = () => {
  */
 window.onkeydown = (keyEvent) => {
     const { key } = keyEvent;
-    const frog = document.getElementById(CONSTANTS.LEVELS.FROG_ID);
+    const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
     const frogPosition = frog.getBoundingClientRect();
 
     /// COMMENTED FOR FURTHER REFERENCE
@@ -222,9 +222,7 @@ const createLevel = (id) => {
     level.innerHTML = id;
     return level;
 };
-
 // #endregion
-
 
 // create a moving log
 const createLogs = () => {
