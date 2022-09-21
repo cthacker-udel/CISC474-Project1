@@ -1,9 +1,21 @@
-button {
+p {
     position: absolute;
-    top: 50%;
+    bottom: 5%;
     left: 50%;
     margin-right: -50%;
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
+    width: 100px;
+    color: white;
+}
+
+.start {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    background-image: url(images/toader-start-screen.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .game {
