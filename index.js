@@ -69,16 +69,16 @@ window.onload = () => {
     const endContainer = document.getElementById("end-container");
     const startContainer = document.getElementById("start-container");
     const rowContainer = document.getElementById("row-container");
-    endContainer.appendChild(createEndrow());
-    rowContainer.appendChild(createWaterrow());
-    rowContainer.appendChild(createBoardwalkrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createGrassrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createRoadrow());
-    startContainer.appendChild(createStartrow());
+    endContainer.appendChild(createRow("end", CONSTANTS.ROWS.END));
+    rowContainer.appendChild(createRow("water", CONSTANTS.ROWS.WATER));
+    rowContainer.appendChild(createRow("boardwalk", CONSTANTS.ROWS.BOARDWALK));
+    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
+    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
+    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
+    rowContainer.appendChild(createRow("grass", CONSTANTS.ROWS.GRASS));
+    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
+    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
+    startContainer.appendChild(createRow("sidewalk", CONSTANTS.ROWS.START));
     startContainer.appendChild(createFrog());
 };
 
@@ -165,94 +165,12 @@ window.onkeydown = (keyEvent) => {
 
 // #region Creating ROWS
 
-/**
- * Creates the start row, and returns the html element
- *
- * @returns The start row
- */
-const createStartrow = () => {
-    const startrow = document.createElement("img");
-    startrow.setAttribute('src', 'images/sidewalk.png');
-    startrow.setAttribute('width', "100%");
-    startrow.setAttribute('height', "auto");
-    startrow.id = CONSTANTS.ROWS.START;
-    startrow.innerHTML = startrow.id;
-    return startrow;
-};
-
-/**
- * Creates the end row, and returns the html element
- *
- * @returns The end row
- */
-const createEndrow = () => {
-    const endrow = document.createElement("img");
-    endrow.setAttribute('src', 'images/end.png');
-    endrow.setAttribute('width', "100%");
-    endrow.setAttribute('height', "auto");
-    endrow.id = CONSTANTS.ROWS.END;
-    endrow.innerHTML = endrow.id;
-    return endrow;
-};
-
-/**
- * Creates the road row
- *
- * @returns The road row
- */
-const createRoadrow = () => {
-    const roadrow = document.createElement("img");
-    roadrow.setAttribute('src', 'images/road.png');
-    roadrow.setAttribute('width', "100%");
-    roadrow.setAttribute('height', "auto");
-    roadrow.id = CONSTANTS.ROWS.ROAD;
-    roadrow.innerHTML = roadrow.id;
-    return roadrow;
-};
-
-/**
- * Creates the grass row
- *
- * @returns The grass row
- */
- const createGrassrow = () => {
-    const grassrow = document.createElement("img");
-    grassrow.setAttribute('src', 'images/grass.png');
-    grassrow.setAttribute('width', "100%");
-    grassrow.setAttribute('height', "auto");
-    grassrow.id = CONSTANTS.ROWS.GRASS;
-    grassrow.innerHTML = grassrow.id;
-    return grassrow;
-};
-
-/**
- * Creates the boardwalk row
- *
- * @returns The boardwalk row
- */
- const createBoardwalkrow = () => {
-    const boardwalkrow = document.createElement("img");
-    boardwalkrow.setAttribute('src', 'images/boardwalk.png');
-    boardwalkrow.setAttribute('width', "100%");
-    boardwalkrow.setAttribute('height', "auto");
-    boardwalkrow.id = CONSTANTS.ROWS.BOARDWALK;
-    boardwalkrow.innerHTML = boardwalkrow.id;
-    return boardwalkrow;
-};
-
-/**
- * Creates the water row
- *
- * @returns The water row
- */
- const createWaterrow = () => {
-    const waterrow = document.createElement("img");
-    waterrow.setAttribute('src', 'images/water.png');
-    waterrow.setAttribute('width', "100%");
-    waterrow.setAttribute('height', "auto");
-    waterrow.id = CONSTANTS.ROWS.WATER;
-    waterrow.innerHTML = waterrow.id;
-    return waterrow;
+const createRow = (img, id) => {
+    const row = document.createElement("img");
+    row.setAttribute("src", `images/${img}.png`);
+    row.id = id;
+    row.innerHTML = row.id;
+    return row;
 };
 
 // #region Creating OBJECTS

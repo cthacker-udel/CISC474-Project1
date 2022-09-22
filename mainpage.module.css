@@ -11,6 +11,11 @@ body {
     background-size: contain;
 }
 
+img {
+    width: 100%;
+    height: auto;
+}
+
 .game {
     max-width: 1500px;
     height: auto;
