@@ -221,7 +221,18 @@ const createLogs = () => {
     return log;
 };
 
+
 function startGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
 };
+
+/**
+ * Increments the score element by 1 each time the frog reachs the top of the level
+ */
+ const incrementScore = () => {
+    const scoreSpan = document.getElementById("score");
+    const scoreStr = scoreSpan.innerText;
+    var score = parseInt(scoreStr) + 1
+    scoreSpan.innerText = score
+}
