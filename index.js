@@ -234,3 +234,13 @@ const createLogs = () => {
     log.style.width = "5.95vw";
     return log;
 };
+
+/**
+ * Increments the score element by 1 each time the frog reachs the top of the level
+ */
+ const incrementScore = () => {
+    const scoreSpan = document.getElementById("score");
+    const scoreStr = scoreSpan.innerText;
+    var score = parseInt(scoreStr) + 1
+    scoreSpan.innerText = score
+}

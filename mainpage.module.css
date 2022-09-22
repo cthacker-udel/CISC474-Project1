@@ -7,3 +7,9 @@
     height: calc()
 }
 
+.score_container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 50px;
+}
