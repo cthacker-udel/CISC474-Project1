@@ -59,20 +59,20 @@ const rowIds = [
  * Fires when the screen loads
  */
 window.onload = () => {
-    
     const endContainer = document.getElementById("end-container");
-    endContainer.appendChild(createEndrow());
-    const roadContainer = document.getElementById("road-container");
-    roadContainer.appendChild(createRoadrow());
-    roadContainer.appendChild(createRoadrow());
-    roadContainer.appendChild(createRoadrow());
     const startContainer = document.getElementById("start-container");
+    const rowContainer = document.getElementById("row-container");
+    endContainer.appendChild(createEndrow());
+    rowContainer.appendChild(createWaterrow());
+    rowContainer.appendChild(createBoardwalkrow());
+    rowContainer.appendChild(createRoadrow());
+    rowContainer.appendChild(createRoadrow());
+    rowContainer.appendChild(createRoadrow());
+    rowContainer.appendChild(createGrassrow());
+    rowContainer.appendChild(createRoadrow());
+    rowContainer.appendChild(createRoadrow());
     startContainer.appendChild(createStartrow());
     startContainer.appendChild(createFrog());
-    roadContainer.appendChild(createRoadrow());
-    roadContainer.appendChild(createRoadrow());
-    roadContainer.appendChild(createRoadrow());
-    roadContainer.appendChild(createRoadrow());
 };
 
 /**
@@ -114,7 +114,7 @@ window.onkeydown = (keyEvent) => {
                 );
                 frog.style.bottom =
                     frog.style.bottom !== "97%"
-                        ? `${previousBottom - 5}%`
+                        ? `${previousBottom - 9}%`
                         : "95%";
             }
             break;
@@ -124,7 +124,7 @@ window.onkeydown = (keyEvent) => {
                 const previousBottom = parseInt(
                     frog.style.bottom.replace("%", ""),
                 );
-                frog.style.bottom = `${previousBottom + 5}%`;
+                frog.style.bottom = `${previousBottom + 9}%`;
             } else if (frog.style.bottom === "95%") {
                 frog.style.bottom = "97%";
             }
@@ -135,7 +135,7 @@ window.onkeydown = (keyEvent) => {
                 const previousLeft = parseInt(
                     frog.style.right.replace("%", ""),
                 );
-                frog.style.right = `${previousLeft + 5}%`;
+                frog.style.right = `${previousLeft + 9}%`;
             } else if (frog.style.right === "95%") {
                 frog.style.right = "97%";
             }
@@ -148,7 +148,7 @@ window.onkeydown = (keyEvent) => {
                 );
                 frog.style.right =
                     frog.style.right !== "97%"
-                        ? `${previousRight - 5}%`
+                        ? `${previousRight - 9}%`
                         : "95%";
             }
             break;
@@ -166,8 +166,8 @@ const createFrog = () => {
     frog.setAttribute('src', 'images/frog.png');
     frog.className = "position-absolute";
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "4.95vh";
-    frog.style.width = "4.95vw";
+    frog.style.height = "50px";
+    frog.style.width = "50px";
     frog.style.right = "50%";
     frog.style.bottom = "1%";
     return frog;
@@ -199,7 +199,7 @@ const createEndrow = () => {
     const endrow = document.createElement("img");
     endrow.setAttribute('src', 'images/end.png');
     endrow.setAttribute('width', "100%");
-    endrow.setAttribute('height', "95");
+    endrow.setAttribute('height', "auto");
     endrow.id = CONSTANTS.ROWS.END;
     endrow.innerHTML = endrow.id;
     return endrow;
@@ -218,6 +218,51 @@ const createRoadrow = () => {
     roadrow.id = CONSTANTS.ROWS.ROAD;
     roadrow.innerHTML = roadrow.id;
     return roadrow;
+};
+
+/**
+ * Creates the grass row
+ *
+ * @returns The grass row
+ */
+ const createGrassrow = () => {
+    const grassrow = document.createElement("img");
+    grassrow.setAttribute('src', 'images/grass.png');
+    grassrow.setAttribute('width', "100%");
+    grassrow.setAttribute('height', "auto");
+    grassrow.id = CONSTANTS.ROWS.GRASS;
+    grassrow.innerHTML = grassrow.id;
+    return grassrow;
+};
+
+/**
+ * Creates the boardwalk row
+ *
+ * @returns The boardwalk row
+ */
+ const createBoardwalkrow = () => {
+    const boardwalkrow = document.createElement("img");
+    boardwalkrow.setAttribute('src', 'images/boardwalk.png');
+    boardwalkrow.setAttribute('width', "100%");
+    boardwalkrow.setAttribute('height', "auto");
+    boardwalkrow.id = CONSTANTS.ROWS.BOARDWALK;
+    boardwalkrow.innerHTML = boardwalkrow.id;
+    return boardwalkrow;
+};
+
+/**
+ * Creates the water row
+ *
+ * @returns The water row
+ */
+ const createWaterrow = () => {
+    const waterrow = document.createElement("img");
+    waterrow.setAttribute('src', 'images/water.png');
+    waterrow.setAttribute('width', "100%");
+    waterrow.setAttribute('height', "auto");
+    waterrow.id = CONSTANTS.ROWS.WATER;
+    waterrow.innerHTML = waterrow.id;
+    return waterrow;
 };
 
 /**
