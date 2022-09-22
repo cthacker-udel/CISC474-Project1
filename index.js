@@ -59,13 +59,20 @@ const rowIds = [
  * Fires when the screen loads
  */
 window.onload = () => {
+    
     const endContainer = document.getElementById("end-container");
     endContainer.appendChild(createEndrow());
     const roadContainer = document.getElementById("road-container");
     roadContainer.appendChild(createRoadrow());
+    roadContainer.appendChild(createRoadrow());
+    roadContainer.appendChild(createRoadrow());
     const startContainer = document.getElementById("start-container");
     startContainer.appendChild(createStartrow());
     startContainer.appendChild(createFrog());
+    roadContainer.appendChild(createRoadrow());
+    roadContainer.appendChild(createRoadrow());
+    roadContainer.appendChild(createRoadrow());
+    roadContainer.appendChild(createRoadrow());
 };
 
 /**
@@ -176,6 +183,8 @@ const createFrog = () => {
 const createStartrow = () => {
     const startrow = document.createElement("img");
     startrow.setAttribute('src', 'images/sidewalk.png');
+    startrow.setAttribute('width', "100%");
+    startrow.setAttribute('height', "auto");
     startrow.id = CONSTANTS.ROWS.START;
     startrow.innerHTML = startrow.id;
     return startrow;
@@ -189,6 +198,8 @@ const createStartrow = () => {
 const createEndrow = () => {
     const endrow = document.createElement("img");
     endrow.setAttribute('src', 'images/end.png');
+    endrow.setAttribute('width', "100%");
+    endrow.setAttribute('height', "95");
     endrow.id = CONSTANTS.ROWS.END;
     endrow.innerHTML = endrow.id;
     return endrow;
@@ -202,6 +213,8 @@ const createEndrow = () => {
 const createRoadrow = () => {
     const roadrow = document.createElement("img");
     roadrow.setAttribute('src', 'images/road.png');
+    roadrow.setAttribute('width', "100%");
+    roadrow.setAttribute('height', "auto");
     roadrow.id = CONSTANTS.ROWS.ROAD;
     roadrow.innerHTML = roadrow.id;
     return roadrow;
