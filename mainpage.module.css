@@ -1,4 +1,15 @@
-.wrapper {
+.start {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    background-image: url(images/toader-start-screen.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.game {
+    display: none;
     width: 100vw;
     height: 100vh;
 }
