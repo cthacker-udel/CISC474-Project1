@@ -14,6 +14,13 @@ const CONSTANTS = {
     OBJECTS: {
         FROG_ID: "frog",
         LOG_ID: "log",
+        // car type and direction it's traveling in
+        CAR_ID: {
+            YELLOW_LEFT: "yellow-left",
+            PURPLE_LEFT: "purple-left",
+            WHITE_RIGHT: "white-right",
+            SEMI_LEFT: "semi-left",
+        }
     },
 };
 
@@ -156,23 +163,6 @@ window.onkeydown = (keyEvent) => {
     }
 };
 
-/**
- * Creates a frog element, and positions it at the beginning of the row
- *
- * @returns Frog element
- */
-const createFrog = () => {
-    const frog = document.createElement("img");
-    frog.setAttribute('src', 'images/frog.png');
-    frog.className = "position-absolute";
-    frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "50px";
-    frog.style.width = "50px";
-    frog.style.right = "50%";
-    frog.style.bottom = "1%";
-    return frog;
-};
-
 // #region Creating ROWS
 
 /**
@@ -263,6 +253,39 @@ const createRoadrow = () => {
     waterrow.id = CONSTANTS.ROWS.WATER;
     waterrow.innerHTML = waterrow.id;
     return waterrow;
+};
+
+// #region Creating OBJECTS
+
+/**
+ * Creates a frog element, and positions it at the beginning of the row
+ *
+ * @returns Frog element
+ */
+ const createFrog = () => {
+    const frog = document.createElement("img");
+    frog.setAttribute('src', 'images/frog.png');
+    frog.className = "position-absolute";
+    frog.id = CONSTANTS.OBJECTS.FROG_ID;
+    frog.style.height = "50px";
+    frog.style.width = "50px";
+    frog.style.right = "50%";
+    frog.style.bottom = "1%";
+    return frog;
+};
+
+/**
+ * Create a car moving left
+ *
+ * @returns car object
+ */
+ const createCarLeft = () => {
+    const carLeft = document.createElement("img");
+    // TODO: make this randomly select cars traveling left
+    carLeft.setAttribute('src', 'images/purple-car-traveling-left.png');
+    carLeft.className = "position-absolute";
+    carLeft.id = CONSTANTS.OBJECTS.CAR_ID.PURPLE_LEFT;
+    return carLeft;
 };
 
 /**
