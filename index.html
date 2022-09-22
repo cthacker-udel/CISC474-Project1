@@ -14,14 +14,12 @@
     </head>
     <script src="./index.js"></script>
     <body>
-        <div
-            class="main_container d-flex flex-column"
-            id="frogger-container"
-        ></div>
-        <div
-            class="score_container"
-            id="score-container"
-            ><span id="score">0</span>
+        <div class="start" id="start-screen" onClick="startGame()">
+        </div>
+        <div class="game" d-flex flex-column id="game-screen">
+            <div class="game-row" id="end-container"> </div>
+            <div class="game-row" id="row-container"></div>
+            <div class="game-row" id="start-container"></div>
         </div>
     </body>
 </html>

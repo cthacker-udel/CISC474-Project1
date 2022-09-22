@@ -1,11 +1,22 @@
-.main_container {
+body {
+    background-color: black;
+}
+.start {
     width: 100vw;
     height: 100vh;
+    background-color: black;
+    background-image: url(images/toader-start-screen.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
-.container_row {
-    height: calc()
+.game {
+    max-width: 1500px;
+    height: auto;
+    display: none;
 }
+
 
 .score_container {
     position: absolute;
