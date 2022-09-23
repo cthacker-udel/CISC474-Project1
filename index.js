@@ -1,6 +1,7 @@
 //#region Constants
 
 let movingCars = [];
+let movingLogs = [];
 
 /**
  * Constants to avoid repeated code
@@ -29,6 +30,7 @@ const CONSTANTS = {
     },
     ROW_VALUES: {
         ROADS: [3, 4, 5, 6, 17, 18, 19],
+        WATER: [7, 8, 14, 15, 16, 20],
     },
     ROWS: {
         ROAD: "road-row",
@@ -150,6 +152,22 @@ const addCar = (timestamp) => {
     movingCars.push([x, y, left > 0]);
 };
 
+const addLog = (timestamp) => {
+    const left = getRandomInt(0, 2);
+    const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
+    const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
+    const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
+    const startingPoint = document.getElementById(`${x}-${y}`);
+    const log = document.createElement("img");
+    log.className = `moving-log-${x}-${y}`;
+    log.height = `${vh(4)}`;
+    log.width = `${vw(4)}`;
+    log.src = "images/log.png";
+    log.setAttribute("direction", left ? "left" : "right");
+    startingPoint.appendChild(log);
+    movingLogs.push([x, y, left > 0]);
+};
+
 const moveCars = () => {
     if (movingCars.length > 0) {
         let index = 0;
@@ -187,6 +205,43 @@ const moveCars = () => {
     }, [30]);
 };
 
+const moveLogs = () => {
+    if (movingLogs.length > 0) {
+        let index = 0;
+        while (index < movingLogs.length) {
+            const eachLog = movingLogs[index];
+            const [x, y, left] = eachLog;
+            if (left && x === 0) {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                currentNode.removeChild(currentNode.childNodes[0]);
+                movingLogs.splice(index, 1);
+                setTimeout(() => {
+                    window.requestAnimationFrame(addLog);
+                }, getRandomInt(1500, 3000));
+            } else if (!left && x === 24) {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                currentNode.removeChild(currentNode.childNodes[0]);
+                movingLogs.splice(index, 1);
+                setTimeout(() => {
+                    window.requestAnimationFrame(addLog);
+                }, getRandomInt(1500, 3000));
+            } else {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                const log = currentNode.childNodes[0];
+                currentNode.removeChild(log);
+                const nextNode = document.getElementById(
+                    `${left ? x - 1 : x + 1}-${y}`,
+                );
+                nextNode.appendChild(log);
+                movingLogs[index++][0] = left ? x - 1 : x + 1;
+            }
+        }
+    }
+    setTimeout(() => {
+        window.requestAnimationFrame(moveLogs);
+    }, [2250]);
+};
+
 function startGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
@@ -210,7 +265,7 @@ const incrementScore = () => {
  * @param {HTMLImageElement} frogInstance
  */
 const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
-    console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
+    // console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
     const fromCoordinate = document.getElementById(`${fromJ}-${fromI}`);
     fromCoordinate.removeChild(fromCoordinate.childNodes[0]);
     const toCoordinate = document.getElementById(`${toJ}-${toI}`);
@@ -289,7 +344,11 @@ window.onload = () => {
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addLog);
+    window.requestAnimationFrame(addLog);
+    window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(moveCars);
+    window.requestAnimationFrame(moveLogs);
 };
 
 //#endregion
