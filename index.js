@@ -1,22 +1,34 @@
 //#region Constants
 
+// Array of moving car coordinates
 let movingCars = [];
+
+// Array of moving log coordinates
 let movingLogs = [];
 
 /**
  * Constants to avoid repeated code
  */
 const CONSTANTS = {
+    /**
+     * Important coordinates, frog startx and starty
+     */
     IMPORTANT_COORDS: {
         START_X: 12,
         START_Y: 24,
     },
+    /**
+     * Measurements for consistency, coord height, width, and the # of columns and rows
+     */
     MEASUREMENTS: {
         COORD_WIDTH: "4vw",
         COORD_HEIGHT: "4vh",
         NUM_COLUMNS: 25,
         NUM_ROWS: 25,
     },
+    /**
+     * The ids of the elements in the DOM
+     */
     OBJECTS: {
         FROG_ID: "frog",
         LOG_ID: "log",
@@ -28,10 +40,16 @@ const CONSTANTS = {
             SEMI_LEFT: "semi-left",
         },
     },
+    /**
+     * The indexes of the rows, specifically where objects will be spawned to then animate to the other side of the screen
+     */
     ROW_VALUES: {
         ROADS: [3, 4, 5, 6, 17, 18, 19],
         WATER: [7, 8, 14, 15, 16, 20],
     },
+    /**
+     * The ids of the rows
+     */
     ROWS: {
         ROAD: "road-row",
         END: "end-row",
@@ -44,7 +62,7 @@ const CONSTANTS = {
 };
 
 /**
- * The ids for each row
+ * The ids for each row, organized into an array
  */
 const rowIds = [
     CONSTANTS.ROWS.WATER,
@@ -134,6 +152,11 @@ const createFrog = () => {
 
 //#region Functions
 
+/**
+ * Adds a car to the random row, and appends it's coordinates to the movingCars array to then be moved
+ * 
+ * @param {number} timestamp - For utility if it needs to be utilized, passed from the requestAnimationFrame function represents the time this function was called
+ */
 const addCar = (timestamp) => {
     const left = getRandomInt(0, 2);
     const y = CONSTANTS.ROW_VALUES.ROADS[getRandomInt(0, 7)];
@@ -152,6 +175,11 @@ const addCar = (timestamp) => {
     movingCars.push([x, y, left > 0]);
 };
 
+/**
+ * Adds a car to the random row, and appends it's coordinates to the movingCars array to then be moved
+ * 
+ * @param {number} timestamp - For utility if it needs to be utilized, passed from the requestAnimationFrame function, represents the time this function was called
+ */
 const addLog = (timestamp) => {
     const left = getRandomInt(0, 2);
     const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
@@ -168,6 +196,14 @@ const addLog = (timestamp) => {
     movingLogs.push([x, y, left > 0]);
 };
 
+/**
+ * Side-Effect function
+ * 
+ * Checks if the movingCars array has cars within it, if it doesn't sets a timer to re-call itself via requestAnimationFrame method, if there is a moving car
+ * - First checks if the car is moving left and has reached the left, then it de-spawns it, waits 3 seconds, and re-spawns another car
+ * - Second checks if the car is moving right and has reached the right, then it de-spawns it, and re-spawns another car
+ * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingCars array
+ */
 const moveCars = () => {
     if (movingCars.length > 0) {
         let index = 0;
@@ -205,6 +241,14 @@ const moveCars = () => {
     }, [30]);
 };
 
+/**
+ * Side-Effect function
+ * 
+ * Checks if the movingLogs array has logs within it, if it doesn't sets a timer to re-call itself via requestAnimationFrame method, if there is a moving log
+ * - First checks if the log is moving left and has reached the left, then it de-spawns it, waits 3 seconds, and re-spawns another log
+ * - Second checks if the log is moving right and has reached the right, then it de-spawns it, and re-spawns another log
+ * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingLogs array
+ */
 const moveLogs = () => {
     if (movingLogs.length > 0) {
         let index = 0;
@@ -242,13 +286,16 @@ const moveLogs = () => {
     }, [2250]);
 };
 
+/**
+ * Starts the game, first sets the start-screen display to none, then displays the game screen
+ */
 function startGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
 }
 
 /**
- * Increments the score element by 1 each time the frog reachs the top of the level
+ * Increments the score element by 1 each time the frog reaches the top of the level (TODO: Refactor)
  */
 const incrementScore = () => {
     const scoreSpan = document.getElementById("score");
