@@ -2,14 +2,15 @@
  * Constants to avoid repeated code
  */
 const CONSTANTS = {
-    ROWS: {
-        ROAD: "road-row",
-        END: "end-row",
-        LILYPAD: "lilypad-row",
-        LOG: "log-row",
-        BOARDWALK: "boardwalk-row",
-        WATER: "water-row",
-        START: "start-row",
+    IMPORTANT_COORDS: {
+        START_X: 12,
+        START_Y: 24,
+    },
+    MEASUREMENTS: {
+        COORD_WIDTH: "4vw",
+        COORD_HEIGHT: "4vh",
+        NUM_COLUMNS: 25,
+        NUM_ROWS: 25,
     },
     OBJECTS: {
         FROG_ID: "frog",
@@ -20,7 +21,17 @@ const CONSTANTS = {
             PURPLE_LEFT: "purple-left",
             WHITE_RIGHT: "white-right",
             SEMI_LEFT: "semi-left",
-        }
+        },
+    },
+    RANGES: {},
+    ROWS: {
+        ROAD: "road-row",
+        END: "end-row",
+        LILYPAD: "lilypad-row",
+        LOG: "log-row",
+        BOARDWALK: "boardwalk-row",
+        WATER: "water-row",
+        START: "start-row",
     },
 };
 
@@ -59,27 +70,62 @@ const rowIds = [
     CONSTANTS.ROWS.WATER,
     CONSTANTS.ROWS.ROAD,
     CONSTANTS.ROWS.BOARDWALK,
-    CONSTANTS.ROWS.GRASS
+    CONSTANTS.ROWS.GRASS,
 ];
 
 /**
  * Fires when the screen loads
  */
 window.onload = () => {
-    const endContainer = document.getElementById("end-container");
-    const startContainer = document.getElementById("start-container");
-    const rowContainer = document.getElementById("row-container");
-    endContainer.appendChild(createRow("end", CONSTANTS.ROWS.END));
-    rowContainer.appendChild(createRow("water", CONSTANTS.ROWS.WATER));
-    rowContainer.appendChild(createRow("boardwalk", CONSTANTS.ROWS.BOARDWALK));
-    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
-    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
-    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
-    rowContainer.appendChild(createRow("grass", CONSTANTS.ROWS.GRASS));
-    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
-    rowContainer.appendChild(createRow("road", CONSTANTS.ROWS.ROAD));
-    startContainer.appendChild(createRow("sidewalk", CONSTANTS.ROWS.START));
-    startContainer.appendChild(createFrog());
+    const frog = createFrog();
+    for (let i = 0; i < CONSTANTS.MEASUREMENTS.NUM_ROWS; i++) {
+        for (let j = 0; j < CONSTANTS.MEASUREMENTS.NUM_COLUMNS; j++) {
+            const row = document.getElementById(`frogger-${i}`);
+            const coord = createCoord(i, j);
+            row.appendChild(coord);
+        }
+    }
+    const startingCoord = document.getElementById(
+        `${CONSTANTS.IMPORTANT_COORDS.START_X}-${CONSTANTS.IMPORTANT_COORDS.START_Y}`,
+    );
+    frog.setAttribute("x", CONSTANTS.IMPORTANT_COORDS.START_X);
+    frog.setAttribute("y", CONSTANTS.IMPORTANT_COORDS.START_Y);
+    startingCoord.innerHTML = "";
+    startingCoord.appendChild(frog);
+};
+
+/**
+ * Creates a coordinate element with the specified i and j
+ *
+ * @param {number} i - The y coordinate
+ * @param {number} j - The x coordinate
+ * @returns
+ */
+const createCoord = (i, j) => {
+    const coord = document.createElement("div");
+    coord.style.height = CONSTANTS.MEASUREMENTS.COORD_HEIGHT;
+    coord.style.width = CONSTANTS.MEASUREMENTS.COORD_WIDTH;
+    coord.className = `x-${j} y-${i}`;
+    coord.setAttribute("coord", `${i},${j}`);
+    coord.id = `${j}-${i}`;
+    return coord;
+};
+
+/**
+ * Moves the frog from `fromI` and `fromJ` to `toI` and `toJ`
+ *
+ * @param {number} i - The y coord
+ * @param {number} j - The x coord
+ * @param {HTMLImageElement} frogInstance
+ */
+const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
+    console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
+    const fromCoordinate = document.getElementById(`${fromJ}-${fromI}`);
+    fromCoordinate.removeChild(fromCoordinate.childNodes[0]);
+    const toCoordinate = document.getElementById(`${toJ}-${toI}`);
+    frogInstance.setAttribute("x", toJ);
+    frogInstance.setAttribute("y", toI);
+    toCoordinate.appendChild(frogInstance);
 };
 
 /**
@@ -90,73 +136,37 @@ window.onload = () => {
 window.onkeydown = (keyEvent) => {
     const { key } = keyEvent;
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
-    const frogPosition = frog.getBoundingClientRect();
-
-    /// COMMENTED FOR FURTHER REFERENCE
-
-    // console.log(frogPosition);
-    // console.log(
-    //     window.innerHeight,
-    //     window.outerHeight,
-    //     "|",
-    //     window.innerWidth,
-    //     window.outerWidth,
-    // );
-    // console.log(
-    //     document.documentElement.clientHeight,
-    //     document.documentElement.clientWidth,
-    // );
-
-    // console.log(vh(10));
-    // console.log(frog.style.bottom);
-
-    // console.log(frogPosition.x);
-    // console.log(frog.style);
 
     switch (key) {
         case "ArrowDown": {
-            if (frog.style.bottom !== "0%") {
-                const previousBottom = parseInt(
-                    frog.style.bottom.replace("%", ""),
-                );
-                frog.style.bottom =
-                    frog.style.bottom !== "97%"
-                        ? `${previousBottom - 9}%`
-                        : "95%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromI < 24) {
+                moveFrog(fromI, fromJ, fromI + 1, fromJ, frog);
             }
             break;
         }
         case "ArrowUp": {
-            if (frog.style.bottom !== "95%" && frog.style.bottom !== "97%") {
-                const previousBottom = parseInt(
-                    frog.style.bottom.replace("%", ""),
-                );
-                frog.style.bottom = `${previousBottom + 9}%`;
-            } else if (frog.style.bottom === "95%") {
-                frog.style.bottom = "97%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromI > 0) {
+                moveFrog(fromI, fromJ, fromI - 1, fromJ, frog);
             }
             break;
         }
         case "ArrowLeft": {
-            if (frog.style.right !== "95%" && frog.style.right !== "97%") {
-                const previousLeft = parseInt(
-                    frog.style.right.replace("%", ""),
-                );
-                frog.style.right = `${previousLeft + 9}%`;
-            } else if (frog.style.right === "95%") {
-                frog.style.right = "97%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromJ > 0) {
+                moveFrog(fromI, fromJ, fromI, fromJ - 1, frog);
             }
             break;
         }
         case "ArrowRight": {
-            if (frog.style.right !== "0%") {
-                const previousRight = parseInt(
-                    frog.style.right.replace("%", ""),
-                );
-                frog.style.right =
-                    frog.style.right !== "97%"
-                        ? `${previousRight - 9}%`
-                        : "95%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromJ < 24) {
+                moveFrog(fromI, fromJ, fromI, fromJ + 1, frog);
             }
             break;
         }
@@ -180,15 +190,12 @@ const createRow = (img, id) => {
  *
  * @returns Frog element
  */
- const createFrog = () => {
+const createFrog = () => {
     const frog = document.createElement("img");
-    frog.setAttribute('src', 'images/frog.png');
-    frog.className = "position-absolute";
+    frog.setAttribute("src", "images/frog.png");
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "50px";
-    frog.style.width = "50px";
-    frog.style.right = "50%";
-    frog.style.bottom = "1%";
+    frog.style.height = "3.5vh";
+    frog.style.width = "3.5vw";
     return frog;
 };
 

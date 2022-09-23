@@ -1,8 +1,61 @@
+/*
+    --------------------------
+            Globals
+    --------------------------
+*/
+
 body {
     background-color: black;
+    overflow: scroll;
 }
-.start {
-    width: 100vw;
+
+/*
+    ------------------------
+            Classes
+    ------------------------
+*/
+
+.log_row {
+    background-image: url(images/log.png);
+}
+
+.boardwalk_row {
+    background-image: url(images/boardwalk.png);
+}
+
+.lilypad_row {
+    background-image: url(images/lilypad.png);
+}
+
+.water_row {
+    background-image: url(images/water.png);
+}
+
+.start_row {
+    background-image: url(images/sidewalk.png);
+}
+
+.road_row {
+    background-image: url(images/road.png);
+}
+
+.end_row {
+    background-image: url(images/end.png);
+}
+
+.grass_row {
+    background-image: url(images/grass.png)
+}
+
+/*
+    --------------------------
+                Ids
+    --------------------------
+*/
+
+#start-screen {
+    z-index: 1;
+    position: absolute;
     height: 100vh;
     background-color: black;
     background-image: url(images/toader-start-screen.gif);
@@ -11,20 +64,9 @@ body {
     background-size: contain;
 }
 
-img {
-    width: 100%;
-    height: auto;
-}
-
-.game {
-    height: auto;
-    display: none;
-}
-
-
-.score_container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 50px;
+#game-board {
+    height: 100vh !important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
