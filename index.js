@@ -182,7 +182,9 @@ const moveCars = () => {
             }
         }
     }
-    window.requestAnimationFrame(moveCars);
+    setTimeout(() => {
+        window.requestAnimationFrame(moveCars);
+    }, [30]);
 };
 
 function startGame() {
