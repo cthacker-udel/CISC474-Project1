@@ -181,15 +181,25 @@ const addCar = (timestamp) => {
  * @param {number} timestamp - For utility if it needs to be utilized, passed from the requestAnimationFrame function, represents the time this function was called
  */
 const addLog = (timestamp) => {
-    const left = getRandomInt(0, 2);
-    const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
-    const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
-    const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
-    const startingPoint = document.getElementById(`${x}-${y}`);
+    let startingPoint = null;
+    let x;
+    let y;
+    let left;
+    while (
+        startingPoint === null ||
+        startingPoint.hasChildNodes() ||
+        movingLogs.map((e) => e[1]).includes(y)
+    ) {
+        left = getRandomInt(0, 2);
+        y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
+        const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
+        x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
+        startingPoint = document.getElementById(`${x}-${y}`);
+    }
     const log = document.createElement("img");
     log.className = `moving-log-${x}-${y}`;
     log.height = `${vh(4)}`;
-    log.width = `${vw(9)}`;
+    log.width = `${vw(4)}`;
     log.src = "images/log.png";
     log.setAttribute("direction", left ? "left" : "right");
     startingPoint.appendChild(log);
@@ -198,7 +208,7 @@ const addLog = (timestamp) => {
 
 /**
  * Side-Effect function
- * 
+ *
  * Checks if the movingCars array has cars within it, if it doesn't sets a timer to re-call itself via requestAnimationFrame method, if there is a moving car
  * - First checks if the car is moving left and has reached the left, then it de-spawns it, waits 3 seconds, and re-spawns another car
  * - Second checks if the car is moving right and has reached the right, then it de-spawns it, and re-spawns another car
@@ -243,13 +253,14 @@ const moveCars = () => {
 
 /**
  * Side-Effect function
- * 
+ *
  * Checks if the movingLogs array has logs within it, if it doesn't sets a timer to re-call itself via requestAnimationFrame method, if there is a moving log
  * - First checks if the log is moving left and has reached the left, then it de-spawns it, waits 3 seconds, and re-spawns another log
  * - Second checks if the log is moving right and has reached the right, then it de-spawns it, and re-spawns another log
  * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingLogs array
  */
 const moveLogs = () => {
+    console.log(movingLogs);
     if (movingLogs.length > 0) {
         let index = 0;
         while (index < movingLogs.length) {
@@ -391,6 +402,8 @@ window.onload = () => {
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addLog);
+    window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
