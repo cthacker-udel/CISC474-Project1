@@ -21,6 +21,7 @@ body {
 
 .boardwalk_row {
     background-image: url(images/boardwalk.png);
+    background-size: contain;
 }
 
 .lilypad_row {
@@ -31,8 +32,9 @@ body {
     background-image: url(images/water.png);
 }
 
-.start_row {
+.sidewalk_row {
     background-image: url(images/sidewalk.png);
+    background-size: contain;
 }
 
 .road_row {
@@ -41,10 +43,12 @@ body {
 
 .end_row {
     background-image: url(images/end.png);
+    background-size: contain;
 }
 
 .grass_row {
-    background-image: url(images/grass.png)
+    background-image: url(images/grass.png);
+    background-size: contain;
 }
 
 /*
@@ -54,8 +58,8 @@ body {
 */
 
 #start-screen {
-    z-index: 1;
     position: absolute;
+    width: 100vw;
     height: 100vh;
     background-color: black;
     background-image: url(images/toader-start-screen.gif);
@@ -66,7 +70,6 @@ body {
 
 #game-board {
     height: 100vh !important;
-    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }

@@ -44,8 +44,8 @@ const CONSTANTS = {
      * The indexes of the rows, specifically where objects will be spawned to then animate to the other side of the screen
      */
     ROW_VALUES: {
-        ROADS: [3, 4, 5, 6, 17, 18, 19],
-        WATER: [7, 8, 14, 15, 16, 20],
+        ROADS: [1, 2, 3, 4, 15, 16, 17, 18, 20, 21, 22, 23],
+        WATER: [7, 8, 9, 10, 11],
     },
     /**
      * The ids of the rows
@@ -189,7 +189,7 @@ const addLog = (timestamp) => {
     const log = document.createElement("img");
     log.className = `moving-log-${x}-${y}`;
     log.height = `${vh(4)}`;
-    log.width = `${vw(4)}`;
+    log.width = `${vw(9)}`;
     log.src = "images/log.png";
     log.setAttribute("direction", left ? "left" : "right");
     startingPoint.appendChild(log);
