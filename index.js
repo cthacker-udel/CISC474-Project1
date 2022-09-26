@@ -1,16 +1,34 @@
+//#region Constants
+
+// Array of moving car coordinates
+let movingCars = [];
+
+// Array of moving log coordinates
+let movingLogs = [];
+
 /**
  * Constants to avoid repeated code
  */
 const CONSTANTS = {
-    ROWS: {
-        ROAD: "road-row",
-        END: "end-row",
-        LILYPAD: "lilypad-row",
-        LOG: "log-row",
-        BOARDWALK: "boardwalk-row",
-        WATER: "water-row",
-        START: "start-row",
+    /**
+     * Important coordinates, frog startx and starty
+     */
+    IMPORTANT_COORDS: {
+        START_X: 12,
+        START_Y: 24,
     },
+    /**
+     * Measurements for consistency, coord height, width, and the # of columns and rows
+     */
+    MEASUREMENTS: {
+        COORD_WIDTH: "4vw",
+        COORD_HEIGHT: "4vh",
+        NUM_COLUMNS: 25,
+        NUM_ROWS: 25,
+    },
+    /**
+     * The ids of the elements in the DOM
+     */
     OBJECTS: {
         FROG_ID: "frog",
         LOG_ID: "log",
@@ -20,9 +38,42 @@ const CONSTANTS = {
             PURPLE_LEFT: "purple-left",
             WHITE_RIGHT: "white-right",
             SEMI_LEFT: "semi-left",
-        }
+        },
+    },
+    /**
+     * The indexes of the rows, specifically where objects will be spawned to then animate to the other side of the screen
+     */
+    ROW_VALUES: {
+        ROADS: [3, 4, 5, 6, 17, 18, 19],
+        WATER: [7, 8, 14, 15, 16, 20],
+    },
+    /**
+     * The ids of the rows
+     */
+    ROWS: {
+        ROAD: "road-row",
+        END: "end-row",
+        LILYPAD: "lilypad-row",
+        LOG: "log-row",
+        BOARDWALK: "boardwalk-row",
+        WATER: "water-row",
+        START: "start-row",
     },
 };
+
+/**
+ * The ids for each row, organized into an array
+ */
+const rowIds = [
+    CONSTANTS.ROWS.WATER,
+    CONSTANTS.ROWS.ROAD,
+    CONSTANTS.ROWS.BOARDWALK,
+    CONSTANTS.ROWS.GRASS,
+];
+
+//#endregion
+
+//#region Helpers
 
 /**
  * Takes in a percent, and returns the numerical value of that percentage of the vh
@@ -53,34 +104,226 @@ const vw = (percent) => {
 };
 
 /**
- * The ids for each row
+ * Generates a random int between min and max
+ *
+ * @param {number} min - The min range for the random int, inclusive
+ * @param {number} max - The max range for the random int, exclusive
+ * @returns - Random integer between min and max
  */
-const rowIds = [
-    CONSTANTS.ROWS.WATER,
-    CONSTANTS.ROWS.ROAD,
-    CONSTANTS.ROWS.BOARDWALK,
-    CONSTANTS.ROWS.GRASS
-];
+const getRandomInt = (min, max) =>
+    Math.floor(Math.random() * (max - min) + min);
+
+//#endregion
+
+//#region Create Functions
 
 /**
- * Fires when the screen loads
+ * Creates a coordinate element with the specified i and j
+ *
+ * @param {number} i - The y coordinate
+ * @param {number} j - The x coordinate
+ * @returns
  */
-window.onload = () => {
-    const endContainer = document.getElementById("end-container");
-    const startContainer = document.getElementById("start-container");
-    const rowContainer = document.getElementById("row-container");
-    endContainer.appendChild(createEndrow());
-    rowContainer.appendChild(createWaterrow());
-    rowContainer.appendChild(createBoardwalkrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createGrassrow());
-    rowContainer.appendChild(createRoadrow());
-    rowContainer.appendChild(createRoadrow());
-    startContainer.appendChild(createStartrow());
-    startContainer.appendChild(createFrog());
+const createCoord = (i, j) => {
+    const coord = document.createElement("div");
+    coord.style.height = CONSTANTS.MEASUREMENTS.COORD_HEIGHT;
+    coord.style.width = CONSTANTS.MEASUREMENTS.COORD_WIDTH;
+    coord.className = `x-${j} y-${i}`;
+    coord.setAttribute("coord", `${i},${j}`);
+    coord.id = `${j}-${i}`;
+    return coord;
 };
+
+/**
+ * Creates a frog element, and positions it at the beginning of the row
+ *
+ * @returns Frog element
+ */
+const createFrog = () => {
+    const frog = document.createElement("img");
+    frog.setAttribute("src", "images/frog.png");
+    frog.id = CONSTANTS.OBJECTS.FROG_ID;
+    frog.style.height = "3.5vh";
+    frog.style.width = "3.5vw";
+    return frog;
+};
+
+//#endregion
+
+//#region Functions
+
+/**
+ * Adds a car to the random row, and appends it's coordinates to the movingCars array to then be moved
+ * 
+ * @param {number} timestamp - For utility if it needs to be utilized, passed from the requestAnimationFrame function represents the time this function was called
+ */
+const addCar = (timestamp) => {
+    const left = getRandomInt(0, 2);
+    const y = CONSTANTS.ROW_VALUES.ROADS[getRandomInt(0, 7)];
+    const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
+    const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
+    const startingPoint = document.getElementById(`${x}-${y}`);
+    const car = document.createElement("img");
+    car.className = `moving-car-${x}-${y}`;
+    car.height = `${vh(4)}`;
+    car.width = `${vw(4)}`;
+    car.src = left
+        ? "images/purple-car-traveling-left.png"
+        : "images/white-car-traveling-right.png";
+    car.setAttribute("direction", left ? "left" : "right");
+    startingPoint.appendChild(car);
+    movingCars.push([x, y, left > 0]);
+};
+
+/**
+ * Adds a car to the random row, and appends it's coordinates to the movingCars array to then be moved
+ * 
+ * @param {number} timestamp - For utility if it needs to be utilized, passed from the requestAnimationFrame function, represents the time this function was called
+ */
+const addLog = (timestamp) => {
+    const left = getRandomInt(0, 2);
+    const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
+    const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
+    const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
+    const startingPoint = document.getElementById(`${x}-${y}`);
+    const log = document.createElement("img");
+    log.className = `moving-log-${x}-${y}`;
+    log.height = `${vh(4)}`;
+    log.width = `${vw(4)}`;
+    log.src = "images/log.png";
+    log.setAttribute("direction", left ? "left" : "right");
+    startingPoint.appendChild(log);
+    movingLogs.push([x, y, left > 0]);
+};
+
+/**
+ * Side-Effect function
+ * 
+ * Checks if the movingCars array has cars within it, if it doesn't sets a timer to re-call itself via requestAnimationFrame method, if there is a moving car
+ * - First checks if the car is moving left and has reached the left, then it de-spawns it, waits 3 seconds, and re-spawns another car
+ * - Second checks if the car is moving right and has reached the right, then it de-spawns it, and re-spawns another car
+ * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingCars array
+ */
+const moveCars = () => {
+    if (movingCars.length > 0) {
+        let index = 0;
+        while (index < movingCars.length) {
+            const eachCar = movingCars[index];
+            const [x, y, left] = eachCar;
+            if (left && x === 0) {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                currentNode.removeChild(currentNode.childNodes[0]);
+                movingCars.splice(index, 1);
+                setTimeout(() => {
+                    window.requestAnimationFrame(addCar);
+                }, getRandomInt(1500, 3000));
+            } else if (!left && x === 24) {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                currentNode.removeChild(currentNode.childNodes[0]);
+                movingCars.splice(index, 1);
+                setTimeout(() => {
+                    window.requestAnimationFrame(addCar);
+                }, getRandomInt(1500, 3000));
+            } else {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                const car = currentNode.childNodes[0];
+                currentNode.removeChild(car);
+                const nextNode = document.getElementById(
+                    `${left ? x - 1 : x + 1}-${y}`,
+                );
+                nextNode.appendChild(car);
+                movingCars[index++][0] = left ? x - 1 : x + 1;
+            }
+        }
+    }
+    setTimeout(() => {
+        window.requestAnimationFrame(moveCars);
+    }, [30]);
+};
+
+/**
+ * Side-Effect function
+ * 
+ * Checks if the movingLogs array has logs within it, if it doesn't sets a timer to re-call itself via requestAnimationFrame method, if there is a moving log
+ * - First checks if the log is moving left and has reached the left, then it de-spawns it, waits 3 seconds, and re-spawns another log
+ * - Second checks if the log is moving right and has reached the right, then it de-spawns it, and re-spawns another log
+ * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingLogs array
+ */
+const moveLogs = () => {
+    if (movingLogs.length > 0) {
+        let index = 0;
+        while (index < movingLogs.length) {
+            const eachLog = movingLogs[index];
+            const [x, y, left] = eachLog;
+            if (left && x === 0) {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                currentNode.removeChild(currentNode.childNodes[0]);
+                movingLogs.splice(index, 1);
+                setTimeout(() => {
+                    window.requestAnimationFrame(addLog);
+                }, getRandomInt(1500, 3000));
+            } else if (!left && x === 24) {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                currentNode.removeChild(currentNode.childNodes[0]);
+                movingLogs.splice(index, 1);
+                setTimeout(() => {
+                    window.requestAnimationFrame(addLog);
+                }, getRandomInt(1500, 3000));
+            } else {
+                const currentNode = document.getElementById(`${x}-${y}`);
+                const log = currentNode.childNodes[0];
+                currentNode.removeChild(log);
+                const nextNode = document.getElementById(
+                    `${left ? x - 1 : x + 1}-${y}`,
+                );
+                nextNode.appendChild(log);
+                movingLogs[index++][0] = left ? x - 1 : x + 1;
+            }
+        }
+    }
+    setTimeout(() => {
+        window.requestAnimationFrame(moveLogs);
+    }, [2250]);
+};
+
+/**
+ * Starts the game, first sets the start-screen display to none, then displays the game screen
+ */
+function startGame() {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+}
+
+/**
+ * Increments the score element by 1 each time the frog reaches the top of the level (TODO: Refactor)
+ */
+const incrementScore = () => {
+    const scoreSpan = document.getElementById("score");
+    const scoreStr = scoreSpan.innerText;
+    var score = parseInt(scoreStr) + 1;
+    scoreSpan.innerText = score;
+};
+
+/**
+ * Moves the frog from `fromI` and `fromJ` to `toI` and `toJ`
+ *
+ * @param {number} i - The y coord
+ * @param {number} j - The x coord
+ * @param {HTMLImageElement} frogInstance
+ */
+const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
+    // console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
+    const fromCoordinate = document.getElementById(`${fromJ}-${fromI}`);
+    fromCoordinate.removeChild(fromCoordinate.childNodes[0]);
+    const toCoordinate = document.getElementById(`${toJ}-${toI}`);
+    frogInstance.setAttribute("x", toJ);
+    frogInstance.setAttribute("y", toI);
+    toCoordinate.appendChild(frogInstance);
+};
+
+//#endregion
+
+//#region Listeners
 
 /**
  * Handles the keydown event, which fires for any key pressed
@@ -90,231 +333,69 @@ window.onload = () => {
 window.onkeydown = (keyEvent) => {
     const { key } = keyEvent;
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
-    const frogPosition = frog.getBoundingClientRect();
-
-    /// COMMENTED FOR FURTHER REFERENCE
-
-    // console.log(frogPosition);
-    // console.log(
-    //     window.innerHeight,
-    //     window.outerHeight,
-    //     "|",
-    //     window.innerWidth,
-    //     window.outerWidth,
-    // );
-    // console.log(
-    //     document.documentElement.clientHeight,
-    //     document.documentElement.clientWidth,
-    // );
-
-    // console.log(vh(10));
-    // console.log(frog.style.bottom);
-
-    // console.log(frogPosition.x);
-    // console.log(frog.style);
 
     switch (key) {
         case "ArrowDown": {
-            if (frog.style.bottom !== "0%") {
-                const previousBottom = parseInt(
-                    frog.style.bottom.replace("%", ""),
-                );
-                frog.style.bottom =
-                    frog.style.bottom !== "97%"
-                        ? `${previousBottom - 9}%`
-                        : "95%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromI < 24) {
+                moveFrog(fromI, fromJ, fromI + 1, fromJ, frog);
             }
             break;
         }
         case "ArrowUp": {
-            if (frog.style.bottom !== "95%" && frog.style.bottom !== "97%") {
-                const previousBottom = parseInt(
-                    frog.style.bottom.replace("%", ""),
-                );
-                frog.style.bottom = `${previousBottom + 9}%`;
-            } else if (frog.style.bottom === "95%") {
-                frog.style.bottom = "97%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromI > 0) {
+                moveFrog(fromI, fromJ, fromI - 1, fromJ, frog);
             }
             break;
         }
         case "ArrowLeft": {
-            if (frog.style.right !== "95%" && frog.style.right !== "97%") {
-                const previousLeft = parseInt(
-                    frog.style.right.replace("%", ""),
-                );
-                frog.style.right = `${previousLeft + 9}%`;
-            } else if (frog.style.right === "95%") {
-                frog.style.right = "97%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromJ > 0) {
+                moveFrog(fromI, fromJ, fromI, fromJ - 1, frog);
             }
             break;
         }
         case "ArrowRight": {
-            if (frog.style.right !== "0%") {
-                const previousRight = parseInt(
-                    frog.style.right.replace("%", ""),
-                );
-                frog.style.right =
-                    frog.style.right !== "97%"
-                        ? `${previousRight - 9}%`
-                        : "95%";
+            const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+            const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            if (fromJ < 24) {
+                moveFrog(fromI, fromJ, fromI, fromJ + 1, frog);
             }
             break;
         }
     }
 };
 
-// #region Creating ROWS
-
 /**
- * Creates the start row, and returns the html element
- *
- * @returns The start row
+ * Fires when the screen loads
  */
-const createStartrow = () => {
-    const startrow = document.createElement("img");
-    startrow.setAttribute('src', 'images/sidewalk.png');
-    startrow.setAttribute('width', "100%");
-    startrow.setAttribute('height', "auto");
-    startrow.id = CONSTANTS.ROWS.START;
-    startrow.innerHTML = startrow.id;
-    return startrow;
+window.onload = () => {
+    const frog = createFrog();
+    for (let i = 0; i < CONSTANTS.MEASUREMENTS.NUM_ROWS; i++) {
+        for (let j = 0; j < CONSTANTS.MEASUREMENTS.NUM_COLUMNS; j++) {
+            const row = document.getElementById(`frogger-${i}`);
+            const coord = createCoord(i, j);
+            row.appendChild(coord);
+        }
+    }
+    const startingCoord = document.getElementById(
+        `${CONSTANTS.IMPORTANT_COORDS.START_X}-${CONSTANTS.IMPORTANT_COORDS.START_Y}`,
+    );
+    frog.setAttribute("x", CONSTANTS.IMPORTANT_COORDS.START_X);
+    frog.setAttribute("y", CONSTANTS.IMPORTANT_COORDS.START_Y);
+    startingCoord.appendChild(frog);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addLog);
+    window.requestAnimationFrame(addLog);
+    window.requestAnimationFrame(addLog);
+    window.requestAnimationFrame(moveCars);
+    window.requestAnimationFrame(moveLogs);
 };
 
-/**
- * Creates the end row, and returns the html element
- *
- * @returns The end row
- */
-const createEndrow = () => {
-    const endrow = document.createElement("img");
-    endrow.setAttribute('src', 'images/end.png');
-    endrow.setAttribute('width', "100%");
-    endrow.setAttribute('height', "auto");
-    endrow.id = CONSTANTS.ROWS.END;
-    endrow.innerHTML = endrow.id;
-    return endrow;
-};
-
-/**
- * Creates the road row
- *
- * @returns The road row
- */
-const createRoadrow = () => {
-    const roadrow = document.createElement("img");
-    roadrow.setAttribute('src', 'images/road.png');
-    roadrow.setAttribute('width', "100%");
-    roadrow.setAttribute('height', "auto");
-    roadrow.id = CONSTANTS.ROWS.ROAD;
-    roadrow.innerHTML = roadrow.id;
-    return roadrow;
-};
-
-/**
- * Creates the grass row
- *
- * @returns The grass row
- */
- const createGrassrow = () => {
-    const grassrow = document.createElement("img");
-    grassrow.setAttribute('src', 'images/grass.png');
-    grassrow.setAttribute('width', "100%");
-    grassrow.setAttribute('height', "auto");
-    grassrow.id = CONSTANTS.ROWS.GRASS;
-    grassrow.innerHTML = grassrow.id;
-    return grassrow;
-};
-
-/**
- * Creates the boardwalk row
- *
- * @returns The boardwalk row
- */
- const createBoardwalkrow = () => {
-    const boardwalkrow = document.createElement("img");
-    boardwalkrow.setAttribute('src', 'images/boardwalk.png');
-    boardwalkrow.setAttribute('width', "100%");
-    boardwalkrow.setAttribute('height', "auto");
-    boardwalkrow.id = CONSTANTS.ROWS.BOARDWALK;
-    boardwalkrow.innerHTML = boardwalkrow.id;
-    return boardwalkrow;
-};
-
-/**
- * Creates the water row
- *
- * @returns The water row
- */
- const createWaterrow = () => {
-    const waterrow = document.createElement("img");
-    waterrow.setAttribute('src', 'images/water.png');
-    waterrow.setAttribute('width', "100%");
-    waterrow.setAttribute('height', "auto");
-    waterrow.id = CONSTANTS.ROWS.WATER;
-    waterrow.innerHTML = waterrow.id;
-    return waterrow;
-};
-
-// #region Creating OBJECTS
-
-/**
- * Creates a frog element, and positions it at the beginning of the row
- *
- * @returns Frog element
- */
- const createFrog = () => {
-    const frog = document.createElement("img");
-    frog.setAttribute('src', 'images/frog.png');
-    frog.className = "position-absolute";
-    frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "50px";
-    frog.style.width = "50px";
-    frog.style.right = "50%";
-    frog.style.bottom = "1%";
-    return frog;
-};
-
-/**
- * Create a car moving left
- *
- * @returns car object
- */
- const createCarLeft = () => {
-    const carLeft = document.createElement("img");
-    // TODO: make this randomly select cars traveling left
-    carLeft.setAttribute('src', 'images/purple-car-traveling-left.png');
-    carLeft.className = "position-absolute";
-    carLeft.id = CONSTANTS.OBJECTS.CAR_ID.PURPLE_LEFT;
-    return carLeft;
-};
-
-/**
- * Create a moving log
- *
- * @returns Log object
- */
-const createLogs = () => {
-    const log = document.createElement("img");
-    log.setAttribute('src', 'images/log.png');
-    log.className = "position-absolute";
-    log.id = CONSTANTS.OBJECTS.LOG_ID;
-    log.style.height = "2.95vh";
-    log.style.width = "5.95vw";
-    return log;
-};
-
-
-function startGame() {
-    document.getElementById("start-screen").style.display = "none";
-    document.getElementById("game-screen").style.display = "block";
-};
-
-/**
- * Increments the score element by 1 each time the frog reachs the top of the level
- */
- const incrementScore = () => {
-    const scoreSpan = document.getElementById("score");
-    const scoreStr = scoreSpan.innerText;
-    var score = parseInt(scoreStr) + 1
-    scoreSpan.innerText = score
-}
+//#endregion
