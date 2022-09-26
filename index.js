@@ -272,6 +272,7 @@ const moveLogs = () => {
             } else {
                 const currentNode = document.getElementById(`${x}-${y}`);
                 const log = currentNode.childNodes[0];
+                //console.log(`${x} ${y}`);
                 currentNode.removeChild(log);
                 const nextNode = document.getElementById(
                     `${left ? x - 1 : x + 1}-${y}`,
@@ -312,7 +313,7 @@ const incrementScore = () => {
  * @param {HTMLImageElement} frogInstance
  */
 const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
-    // console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
+    console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
     const fromCoordinate = document.getElementById(`${fromJ}-${fromI}`);
     fromCoordinate.removeChild(fromCoordinate.childNodes[0]);
     const toCoordinate = document.getElementById(`${toJ}-${toI}`);
@@ -321,6 +322,11 @@ const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
     toCoordinate.appendChild(frogInstance);
 };
 
+function waterJump() {
+
+    const waterRow = document.getElementsByClassName("water-row");
+
+}
 //#endregion
 
 //#region Listeners
