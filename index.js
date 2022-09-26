@@ -204,12 +204,18 @@ const addLog = (timestamp) => {
  * - Second checks if the car is moving right and has reached the right, then it de-spawns it, and re-spawns another car
  * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingCars array
  */
-const moveCars = () => {
+const moveCars = (timestamp, frogInstance) => {
     if (movingCars.length > 0) {
         let index = 0;
         while (index < movingCars.length) {
             const eachCar = movingCars[index];
             const [x, y, left] = eachCar;
+            const frogx = frogInstance ? Number.parseInt(frogInstance.getAttribute("x")) :-1; 
+            const frogy = frogInstance ? Number.parseInt(frogInstance.getAttribute("y")) :-1;
+            if (x == frogx && y == frogy) {
+                console.log("hit by a car");
+                resetFrog(frogInstance);
+            }
             if (left && x === 0) {
                 const currentNode = document.getElementById(`${x}-${y}`);
                 currentNode.removeChild(currentNode.childNodes[0]);
@@ -237,7 +243,7 @@ const moveCars = () => {
         }
     }
     setTimeout(() => {
-        window.requestAnimationFrame(moveCars);
+        window.requestAnimationFrame((time) => moveCars(time, frogInstance));
     }, [30]);
 };
 
@@ -320,19 +326,24 @@ const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
     frogInstance.setAttribute("x", toJ);
     frogInstance.setAttribute("y", toI);
     toCoordinate.appendChild(frogInstance);
+    waterJump(frogInstance);
 };
 
 const waterJump = (frogInstance) => {
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
-    const waterRow = document.getElementsById(CONSTANTS.ROW_VALUES.WATER);
     const fromI = Number.parseInt(frog.getAttribute("y"), 10);
     const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
-    if (fromI == waterRow) {
+    if (CONSTANTS.ROW_VALUES.WATER.includes(fromI)) {
         console.log("touched water");
         moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
     }
 
+}
 
+const resetFrog = (frogInstance) => {
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+    moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
 }
 //#endregion
 
@@ -407,7 +418,7 @@ window.onload = () => {
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
-    window.requestAnimationFrame(moveCars);
+    window.requestAnimationFrame((time) => moveCars(time, frog));
     window.requestAnimationFrame(moveLogs);
 };
 
