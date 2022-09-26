@@ -44,7 +44,8 @@ body {
 }
 
 .grass_row {
-    background-image: url(images/grass.png)
+    background-image: url(images/grass.png);
+    background-size: contain;
 }
 
 /*

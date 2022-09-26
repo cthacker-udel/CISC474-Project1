@@ -189,7 +189,7 @@ const addLog = (timestamp) => {
     const log = document.createElement("img");
     log.className = `moving-log-${x}-${y}`;
     log.height = `${vh(4)}`;
-    log.width = `${vw(4)}`;
+    log.width = `${vw(9)}`;
     log.src = "images/log.png";
     log.setAttribute("direction", left ? "left" : "right");
     startingPoint.appendChild(log);
