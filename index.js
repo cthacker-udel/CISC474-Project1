@@ -322,9 +322,16 @@ const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
     toCoordinate.appendChild(frogInstance);
 };
 
-function waterJump() {
+const waterJump = (frogInstance) => {
+    const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
+    const waterRow = document.getElementsById(CONSTANTS.ROW_VALUES.WATER);
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+    if (fromI == waterRow) {
+        console.log("touched water");
+        moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
+    }
 
-    const waterRow = document.getElementsByClassName("water-row");
 
 }
 //#endregion
