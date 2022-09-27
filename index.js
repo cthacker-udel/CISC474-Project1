@@ -3,8 +3,6 @@
 // Array of moving car coordinates
 let movingCars = [];
 
-// Array of moving log coordinates
-let movingLogs = [];
 
 /**
  * Constants to avoid repeated code
@@ -150,6 +148,21 @@ const createFrog = () => {
     return frog;
 };
 
+const createLog = (x, y, isMovingLeft) => {
+    const log = document.createElement("img");
+    log.className = `moving-log ${x}-${y}`;
+    log.height = `${vh(4)}`;
+    log.width = `${vw(4)}`;
+    log.src = "images/log.png";
+    log.setAttribute("direction", isMovingLeft ? "left" : "right");
+    log.setAttribute("x", x);
+    log.setAttribute("y", y);
+    log.style.position = "relative";
+    return log;
+};
+
+const gatherLogs = () => document.getElementsByClassName("moving-log");
+
 //#endregion
 
 //#region Functions
@@ -183,30 +196,38 @@ const addCar = (timestamp) => {
  * @param {number} timestamp - For utility if it needs to be utilized, passed from the requestAnimationFrame function, represents the time this function was called
  */
 const addLog = (timestamp) => {
-    let startingPoint = null;
-    let x;
-    let y;
-    let left;
-    while (
-        startingPoint === null ||
-        startingPoint.hasChildNodes() ||
-        movingLogs.map((e) => e[1]).includes(y)
-    ) {
-        left = getRandomInt(0, 2);
-        y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
-        const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
-        x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
-        startingPoint = document.getElementById(`${x}-${y}`);
+    const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 5)]; // random row which to place the log on
+    const left = getRandomInt(0, 2); // determines if left or right
+    const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left; // either left or far right
+    const x = calculatedX > 0 ? calculatedX - 1 : calculatedX; // -1 if far right to avoid indexError, else keep the same because it's 0
+    const startingPoint = document.getElementById(`${x}-${y}`); // gather coordinate to place log at
+    const logs = gatherLogs();
+
+    const logsInDirection = [...logs].filter((eachLog) => Number.parseInt(eachLog.getAttribute("y")) === y);
+    console.log(logsInDirection);
+    if (logsInDirection.length > 0) {
+        // logs already present in row, place it on the correct directional spot
+        const isLeft = logsInDirection[0][2];
+        if (isLeft) {
+            const rightMostPoint = document.getElementById(`24-${y}`);
+            if (rightMostPoint.childElementCount === 0) {
+                const log = createLog(23, y, isLeft);
+                rightMostPoint.appendChild(log);
+                return;
+            }
+        } else {
+            const leftMostPoint = document.getElementById(`0-${y}`);
+            if (leftMostPoint.childElementCount === 0) {
+                const log = createLog(0, y, false);
+                leftMostPoint.appendChild(log);
+                return;
+            }
+        }
+    } else {
+        const log = createLog(x, y, left);
+        startingPoint.appendChild(log);
+        return;
     }
-    const log = document.createElement("img");
-    log.className = `moving-log-${x}-${y}`;
-    log.height = `${vh(4)}`;
-    log.width = `${vw(4)}`;
-    log.src = "images/log.png";
-    log.setAttribute("direction", left ? "left" : "right");
-    log.style.position = "relative";
-    startingPoint.appendChild(log);
-    movingLogs.push([x, y, left > 0]);
 };
 
 /**
@@ -264,57 +285,69 @@ const moveCars = () => {
  * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingLogs array
  */
 const moveLogs = (timestamp, frogInstance) => {
+    const movingLogs = gatherLogs();
     if (movingLogs.length > 0) {
         let index = 0;
         while (index < movingLogs.length) {
             const eachLog = movingLogs[index];
-            const [x, y, left] = eachLog;
-            if (left && x === 0) {
-                const currentNode = document.getElementById(`${x}-${y}`);
-                [...currentNode.childNodes].forEach((eachNode) =>
-                    currentNode.removeChild(eachNode),
-                );
-                movingLogs.splice(index, 1);
-                setTimeout(() => {
-                    window.requestAnimationFrame(addLog);
-                }, getRandomInt(1500, 3000));
-            } else if (!left && x === 24) {
-                const currentNode = document.getElementById(`${x}-${y}`);
-                [...currentNode.childNodes].forEach((eachNode) =>
-                    currentNode.removeChild(eachNode),
-                );
-                movingLogs.splice(index, 1);
-                setTimeout(() => {
-                    window.requestAnimationFrame(addLog);
-                }, getRandomInt(1500, 3000));
-            } else {
-                const currentNode = document.getElementById(`${x}-${y}`);
-                const log = currentNode.childNodes[0];
-                [...currentNode.childNodes].forEach((eachNode) =>
-                    currentNode.removeChild(eachNode),
-                );
+            const [x, y, left] = [
+                +eachLog.getAttribute("x"),
+                +eachLog.getAttribute("y"),
+                eachLog.getAttribute("direction") === "left",
+            ];
+            const currentNode = document.getElementById(`${x}-${y}`);
+            [...currentNode.childNodes].forEach((eachNode) =>
+                currentNode.removeChild(eachNode),
+            );
+            if ((left && x > 0) || (!left && x < 24)) {
                 const nextNode = document.getElementById(
                     `${left ? x - 1 : x + 1}-${y}`,
                 );
-                nextNode.appendChild(log);
+                nextNode.appendChild(eachLog);
                 const isCurrentFrogLog =
                     frogInstance.getAttribute("onLog") === "true" &&
-                    movingLogs[index][0] ===
-                        parseInt(frogInstance.getAttribute("x"), 10) &&
-                    movingLogs[index][1] ===
-                        parseInt(frogInstance.getAttribute("y"), 10);
-                movingLogs[index++][0] = left ? x - 1 : x + 1;
+                    x === parseInt(frogInstance.getAttribute("x"), 10) &&
+                    y === parseInt(frogInstance.getAttribute("y"), 10);
+                try {
+                    movingLogs[index].setAttribute("x", left ? x - 1 : x + 1);
+                } catch (e) {
+                    console.log("in catch, ", movingLogs, index);
+                }
                 if (isCurrentFrogLog) {
                     nextNode.appendChild(frogInstance);
-                    frogInstance.setAttribute("x", movingLogs[index - 1][0]);
-                    frogInstance.setAttribute("y", movingLogs[index - 1][1]);
+                    frogInstance.setAttribute(
+                        "x",
+                        +movingLogs[index].getAttribute("x"),
+                    );
+                    frogInstance.setAttribute(
+                        "y",
+                        +movingLogs.getAttribute("y"),
+                    );
                 }
             }
+            index += 1;
         }
     }
-    setTimeout(() => {
-        window.requestAnimationFrame((time) => moveLogs(time, frogInstance));
-    }, [2500]);
+};
+
+const logMasterFunction = (timestamp, frogInstance) => {
+    let interval = undefined;
+    try {
+            interval = setInterval(() => {
+            let count = 0;
+            const logRoundCount = getRandomInt(1, 5);
+            while (count < logRoundCount) {
+                addLog(timestamp);
+                count++;
+            }
+            moveLogs(timestamp, frogInstance);
+        }, [2500]);
+    } catch (e) {
+        console.error(e);
+        if (interval) {
+            clearInterval(interval);
+        }
+    }
 };
 
 /**
@@ -349,9 +382,7 @@ const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
     frogInstance.setAttribute("y", toI);
     toCoordinate.appendChild(frogInstance);
     if (
-        movingLogs.find(
-            (eachCoord) => eachCoord[0] === toJ && eachCoord[1] === toI,
-        )
+        toCoordinate.childElementCount > 0 && [...toCoordinate.children].filter((eachNode) => eachNode.className.includes("moving-log")).length > 0
     ) {
         frogInstance.style.position = "absolute";
         frogInstance.style.right = ".5vw";
@@ -436,13 +467,8 @@ window.onload = () => {
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
-    window.requestAnimationFrame(addLog);
-    window.requestAnimationFrame(addLog);
-    window.requestAnimationFrame(addLog);
-    window.requestAnimationFrame(addLog);
-    window.requestAnimationFrame(addLog);
+    logMasterFunction(Date.now(), frog);
     window.requestAnimationFrame((time) => moveCars(time, frog));
-    window.requestAnimationFrame((time) => moveLogs(time, frog));
 };
 
 //#endregion
