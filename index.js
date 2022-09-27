@@ -204,12 +204,20 @@ const addLog = (timestamp) => {
  * - Second checks if the car is moving right and has reached the right, then it de-spawns it, and re-spawns another car
  * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingCars array
  */
-const moveCars = () => {
+const moveCars = (timestamp, frogInstance) => {
+    console.log(document.getElementById("lives").innerHTML);
     if (movingCars.length > 0) {
         let index = 0;
         while (index < movingCars.length) {
             const eachCar = movingCars[index];
             const [x, y, left] = eachCar;
+            const frogx = frogInstance ? Number.parseInt(frogInstance.getAttribute("x")) :-1; 
+            const frogy = frogInstance ? Number.parseInt(frogInstance.getAttribute("y")) :-1;
+            if (x == frogx && y == frogy) {
+                console.log("hit by a car");
+                resetFrog(frogInstance);
+                loseLife();
+            }
             if (left && x === 0) {
                 const currentNode = document.getElementById(`${x}-${y}`);
                 currentNode.removeChild(currentNode.childNodes[0]);
@@ -237,7 +245,7 @@ const moveCars = () => {
         }
     }
     setTimeout(() => {
-        window.requestAnimationFrame(moveCars);
+        window.requestAnimationFrame((time) => moveCars(time, frogInstance));
     }, [30]);
 };
 
@@ -272,6 +280,7 @@ const moveLogs = () => {
             } else {
                 const currentNode = document.getElementById(`${x}-${y}`);
                 const log = currentNode.childNodes[0];
+                //console.log(`${x} ${y}`);
                 currentNode.removeChild(log);
                 const nextNode = document.getElementById(
                     `${left ? x - 1 : x + 1}-${y}`,
@@ -291,7 +300,7 @@ const moveLogs = () => {
  */
 function startGame() {
     document.getElementById("start-screen").style.display = "none";
-    document.getElementById("game-screen").style.display = "block";
+    document.getElementById("game-board").style.display = "block";
 }
 
 /**
@@ -312,17 +321,46 @@ const incrementScore = () => {
  * @param {HTMLImageElement} frogInstance
  */
 const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
-    // console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
+    console.log("moving to ", `${fromI} ${fromJ} to ${toI} ${toJ}`);
     const fromCoordinate = document.getElementById(`${fromJ}-${fromI}`);
     fromCoordinate.removeChild(fromCoordinate.childNodes[0]);
     const toCoordinate = document.getElementById(`${toJ}-${toI}`);
     frogInstance.setAttribute("x", toJ);
     frogInstance.setAttribute("y", toI);
     toCoordinate.appendChild(frogInstance);
+    waterJump(frogInstance);
 };
 
-//#endregion
+const waterJump = (frogInstance) => {
+    const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+    if (CONSTANTS.ROW_VALUES.WATER.includes(fromI)) {
+        console.log("touched water");
+        moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
+        loseLife();
+    }
 
+}
+
+const resetFrog = (frogInstance) => {
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+    moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
+}
+//#endregion
+function loseLife() {
+    const lives = document.getElementById("lives");
+    lives.innerHTML = Number.parseInt(lives.innerHTML) - 1;
+    console.log("lost life");
+    //console.log(lives.innerHTML, typeof lives.innerHTML);
+    if (Number.parseInt(lives.innerHTML) == 0){
+        console.log(lives.innerHTML, typeof lives.innerHTML);
+        document.getElementById("start-screen").style.display = "block";
+        document.getElementById("game-board").style.display = "none";
+        lives.innerHTML = 3;
+    }
+}
 //#region Listeners
 
 /**
@@ -394,7 +432,7 @@ window.onload = () => {
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
-    window.requestAnimationFrame(moveCars);
+    window.requestAnimationFrame((time) => moveCars(time, frog));
     window.requestAnimationFrame(moveLogs);
 };
 
