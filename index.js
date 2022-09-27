@@ -143,8 +143,8 @@ const createFrog = () => {
     const frog = document.createElement("img");
     frog.setAttribute("src", "images/frog.png");
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "3.5vh";
-    frog.style.width = "3.5vw";
+    frog.style.height = "3.9vh";
+    frog.style.width = "3.9vw";
     return frog;
 };
 
@@ -182,7 +182,7 @@ const addCar = (timestamp) => {
  */
 const addLog = (timestamp) => {
     const left = getRandomInt(0, 2);
-    const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 6)];
+    const y = CONSTANTS.ROW_VALUES.WATER[getRandomInt(0, 5)];
     const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
     const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
     const startingPoint = document.getElementById(`${x}-${y}`);
