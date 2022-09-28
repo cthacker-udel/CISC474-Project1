@@ -353,8 +353,9 @@ function loseLife() {
     const lives = document.getElementById("lives");
     lives.innerHTML = Number.parseInt(lives.innerHTML) - 1;
     console.log("lost life");
-    //console.log(lives.innerHTML, typeof lives.innerHTML);
-    if (Number.parseInt(lives.innerHTML) == 0){
+    updateLives(Number.parseInt(lives.innerHTML));
+
+    if (Number.parseInt(lives.innerHTML) <1){
         console.log(lives.innerHTML, typeof lives.innerHTML);
         document.getElementById("start-screen").style.display = "block";
         document.getElementById("game-board").style.display = "none";
@@ -408,11 +409,43 @@ window.onkeydown = (keyEvent) => {
     }
 };
 
+function updateLives(lives){
+    console.log("update lives");
+    var imgFrog = document.createElement("img");
+    imgFrog.setAttribute("src", "images/frog.png");
+    imgFrog.style.height = "3.9vh";
+    imgFrog.style.width = "3vw";
+    const clone = imgFrog.cloneNode(true);
+    const clone2 = imgFrog.cloneNode(true);
+    var text = document.createTextNode("Lives: ");
+    document.getElementById("frogger-0").style.color = "#ffeab0";
+
+   
+    if (lives==3){
+        document.getElementById("frogger-0").appendChild(text);
+        document.getElementById("frogger-0").appendChild(imgFrog);
+        document.getElementById("frogger-0").appendChild(clone);
+        document.getElementById("frogger-0").appendChild(clone2);
+    }
+    else if(lives==2){  
+        document.getElementById("frogger-0").innerHTML="";
+        document.getElementById("frogger-0").appendChild(text);
+        document.getElementById("frogger-0").appendChild(imgFrog);
+        document.getElementById("frogger-0").appendChild(clone);
+    }
+    else if(lives==1){
+       document.getElementById("frogger-0").innerHTML="";   
+       document.getElementById("frogger-0").appendChild(text);
+       document.getElementById("frogger-0").appendChild(imgFrog);
+    }
+
+}
 /**
  * Fires when the screen loads
  */
 window.onload = () => {
     const frog = createFrog();
+    updateLives(3);
     for (let i = 0; i < CONSTANTS.MEASUREMENTS.NUM_ROWS; i++) {
         for (let j = 0; j < CONSTANTS.MEASUREMENTS.NUM_COLUMNS; j++) {
             const row = document.getElementById(`frogger-${i}`);
