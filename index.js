@@ -320,9 +320,9 @@ const reachedEnd = (frogInstance) => {
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
     const fromI = Number.parseInt(frog.getAttribute("y"), 10);
     const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
-    if (fromI == 0) {
+
+    if (fromI === 1) {
         console.log("Reached the end")
-        moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
         endingScreen();
         return true
     }
