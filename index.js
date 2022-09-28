@@ -305,7 +305,7 @@ const incrementScore = () => {
 };
 
 /*
-* Resets
+* Identifies when the frog reaches the end and sets ending screen
 */
 const reachedEnd = (frogInstance) => {
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
@@ -316,15 +316,12 @@ const reachedEnd = (frogInstance) => {
         moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
         endingScreen();
         return true
-        incrementScore();
     }
 }
 
 const endingScreen = () => {
-    window.onload = () => {
-        console.log("final")
-    }
-    console.log('This is the ending screen')
+    document.getElementById("end-screen").style.display = "block";
+    document.getElementById("game-board").style.display = "none";
 }
 
 /**
@@ -372,7 +369,7 @@ window.onkeydown = (keyEvent) => {
             reachedEnd(frog);
             if (fromI > 0) {
                 moveFrog(fromI, fromJ, fromI - 1, fromJ, frog);
-            }w
+            }
             break;
         }
         case "ArrowLeft": {
