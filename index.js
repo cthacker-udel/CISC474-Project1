@@ -144,7 +144,7 @@ const createFrog = () => {
     frog.setAttribute("src", "images/frog.png");
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
     frog.style.height = "3.9vh";
-    frog.style.width = "3.9vw";
+    frog.style.width = "3vw";
     return frog;
 };
 
@@ -159,7 +159,7 @@ const createFrog = () => {
  */
 const addCar = (timestamp) => {
     const left = getRandomInt(0, 2);
-    const y = CONSTANTS.ROW_VALUES.ROADS[getRandomInt(0, 7)];
+    const y = CONSTANTS.ROW_VALUES.ROADS[getRandomInt(0, 12)];
     const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
     const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
     const startingPoint = document.getElementById(`${x}-${y}`);
@@ -331,38 +331,85 @@ const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
     waterJump(frogInstance);
 };
 
+/**
+ * Removes life and resets frog to the beginning when water is touched
+ * 
+ * @param {HTMLImageElement} frogInstance 
+ */
 const waterJump = (frogInstance) => {
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
     const fromI = Number.parseInt(frog.getAttribute("y"), 10);
     const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
     if (CONSTANTS.ROW_VALUES.WATER.includes(fromI)) {
         console.log("touched water");
-        moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
+        resetFrog(frogInstance);
         loseLife();
     }
 
 }
 
+/**
+ * Moves frog to the beginning
+ * 
+ * @param {HTMLImageElement} frogInstance 
+ */
 const resetFrog = (frogInstance) => {
     const fromI = Number.parseInt(frog.getAttribute("y"), 10);
     const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
     moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
     
 }
-//#endregion
+
+/**
+ * Moves frog to the beginning and updates lives var when it loses a life
+ * 
+ * @param {HTMLImageElement} frogInstance 
+ */
 function loseLife() {
     const lives = document.getElementById("lives");
     lives.innerHTML = Number.parseInt(lives.innerHTML) - 1;
     console.log("lost life");
     updateLives(Number.parseInt(lives.innerHTML));
 
-    if (Number.parseInt(lives.innerHTML) <1){
+    if (Number.parseInt(lives.innerHTML) < 1){
         console.log(lives.innerHTML, typeof lives.innerHTML);
         updateLives(0);
         updateLives(3);
         document.getElementById("start-screen").style.display = "block";
         document.getElementById("game-board").style.display = "none";
         lives.innerHTML = 3;  
+    }
+}
+
+function updateLives(lives){
+    console.log("update lives");
+    var imgFrog = document.createElement("img");
+    imgFrog.setAttribute("src", "images/frog.png");
+    imgFrog.style.height = "3.9vh";
+    imgFrog.style.width = "3vw";
+    const clone = imgFrog.cloneNode(true);
+    const clone2 = imgFrog.cloneNode(true);
+    var text = document.createTextNode(" ");
+    document.getElementById("frogger-0").style.color = "#ffeab0";
+    if (lives==3){
+        document.getElementById("frogger-0").appendChild(text);
+        document.getElementById("frogger-0").appendChild(imgFrog);
+        document.getElementById("frogger-0").appendChild(clone);
+        document.getElementById("frogger-0").appendChild(clone2);
+    }
+    else if(lives==2){  
+        document.getElementById("frogger-0").innerHTML="";
+        document.getElementById("frogger-0").appendChild(text);
+        document.getElementById("frogger-0").appendChild(imgFrog);
+        document.getElementById("frogger-0").appendChild(clone);
+    }
+    else if(lives==1){
+       document.getElementById("frogger-0").innerHTML="";   
+       document.getElementById("frogger-0").appendChild(text);
+       document.getElementById("frogger-0").appendChild(imgFrog);
+    }
+    else{
+        document.getElementById("frogger-0").innerHTML="";  
     }
 }
 //#region Listeners
@@ -412,40 +459,6 @@ window.onkeydown = (keyEvent) => {
     }
 };
 
-function updateLives(lives){
-    console.log("update lives");
-    var imgFrog = document.createElement("img");
-    imgFrog.setAttribute("src", "images/frog.png");
-    imgFrog.style.height = "3.9vh";
-    imgFrog.style.width = "3vw";
-    const clone = imgFrog.cloneNode(true);
-    const clone2 = imgFrog.cloneNode(true);
-    var text = document.createTextNode("Lives: ");
-    document.getElementById("frogger-0").style.color = "#ffeab0";
-
-   
-    if (lives==3){
-        document.getElementById("frogger-0").appendChild(text);
-        document.getElementById("frogger-0").appendChild(imgFrog);
-        document.getElementById("frogger-0").appendChild(clone);
-        document.getElementById("frogger-0").appendChild(clone2);
-    }
-    else if(lives==2){  
-        document.getElementById("frogger-0").innerHTML="";
-        document.getElementById("frogger-0").appendChild(text);
-        document.getElementById("frogger-0").appendChild(imgFrog);
-        document.getElementById("frogger-0").appendChild(clone);
-    }
-    else if(lives==1){
-       document.getElementById("frogger-0").innerHTML="";   
-       document.getElementById("frogger-0").appendChild(text);
-       document.getElementById("frogger-0").appendChild(imgFrog);
-    }
-    else{
-        document.getElementById("frogger-0").innerHTML="";  
-    }
-
-}
 /**
  * Fires when the screen loads
  */
@@ -465,9 +478,15 @@ window.onload = () => {
     frog.setAttribute("x", CONSTANTS.IMPORTANT_COORDS.START_X);
     frog.setAttribute("y", CONSTANTS.IMPORTANT_COORDS.START_Y);
     startingCoord.appendChild(frog);
+    
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
