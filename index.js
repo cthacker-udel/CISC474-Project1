@@ -347,6 +347,7 @@ const resetFrog = (frogInstance) => {
     const fromI = Number.parseInt(frog.getAttribute("y"), 10);
     const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
     moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
+    
 }
 //#endregion
 function loseLife() {
@@ -357,9 +358,11 @@ function loseLife() {
 
     if (Number.parseInt(lives.innerHTML) <1){
         console.log(lives.innerHTML, typeof lives.innerHTML);
+        updateLives(0);
+        updateLives(3);
         document.getElementById("start-screen").style.display = "block";
         document.getElementById("game-board").style.display = "none";
-        lives.innerHTML = 3;
+        lives.innerHTML = 3;  
     }
 }
 //#region Listeners
@@ -437,6 +440,9 @@ function updateLives(lives){
        document.getElementById("frogger-0").innerHTML="";   
        document.getElementById("frogger-0").appendChild(text);
        document.getElementById("frogger-0").appendChild(imgFrog);
+    }
+    else{
+        document.getElementById("frogger-0").innerHTML="";  
     }
 
 }
