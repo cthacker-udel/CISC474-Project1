@@ -314,7 +314,7 @@ const reachedEnd = (frogInstance) => {
     if (fromI == 0) {
         console.log("Reached the end")
         moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
-        endingScreen();
+        /*endingScreen();*/
         return true
     }
 }
