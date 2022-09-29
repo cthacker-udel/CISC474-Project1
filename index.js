@@ -496,7 +496,7 @@ window.onkeydown = (keyEvent) => {
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
             frog.setAttribute("src", "images/frog-down.png");
             frog.style.height = "3.9vh";
-            frog.style.width = "2.9vw";
+            frog.style.width = "3vw";
             if (fromI < 24) {
                 moveFrog(fromI, fromJ, fromI + 1, fromJ, frog);
             }
@@ -533,7 +533,7 @@ window.onkeydown = (keyEvent) => {
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
             frog.setAttribute("src", "images/frog-right.png");
             frog.style.height = "3.9vh";
-            frog.style.width = "2.9vw";
+            frog.style.width = "3vw";
             if (fromJ < 24) {
                 moveFrog(fromI, fromJ, fromI, fromJ + 1, frog);
             }
