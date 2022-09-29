@@ -445,6 +445,7 @@ window.onkeydown = (keyEvent) => {
 
     switch (key) {
         case "ArrowDown": {
+            frog.setAttribute("src", "images/frog-down.png");
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
             if (fromI < 24) {
@@ -453,6 +454,7 @@ window.onkeydown = (keyEvent) => {
             break;
         }
         case "ArrowUp": {
+            frog.setAttribute("src", "images/frog.png");
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
             reachedEnd(frog);
@@ -462,6 +464,7 @@ window.onkeydown = (keyEvent) => {
             break;
         }
         case "ArrowLeft": {
+            frog.setAttribute("src", "images/frog-left.png");
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
             if (fromJ > 0) {
@@ -470,6 +473,7 @@ window.onkeydown = (keyEvent) => {
             break;
         }
         case "ArrowRight": {
+            frog.setAttribute("src", "images/frog-right.png");
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
             if (fromJ < 24) {
