@@ -144,7 +144,7 @@ const createFrog = () => {
     frog.setAttribute("src", "images/frog.png");
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
     frog.style.height = "3.9vh";
-    frog.style.width = "3.9vw";
+    frog.style.width = "3vw";
     return frog;
 };
 
