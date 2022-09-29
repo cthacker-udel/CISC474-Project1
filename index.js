@@ -144,8 +144,8 @@ const createFrog = () => {
     const frog = document.createElement("img");
     frog.setAttribute("src", "images/frog.png");
     frog.id = CONSTANTS.OBJECTS.FROG_ID;
-    frog.style.height = "3.5vh";
-    frog.style.width = "3.5vw";
+    frog.style.height = "3.9vh";
+    frog.style.width = "3vw";
     frog.style.position = "relative";
     return frog;
 };
@@ -161,7 +161,7 @@ const createFrog = () => {
  */
 const addCar = (timestamp) => {
     const left = getRandomInt(0, 2);
-    const y = CONSTANTS.ROW_VALUES.ROADS[getRandomInt(0, 7)];
+    const y = CONSTANTS.ROW_VALUES.ROADS[getRandomInt(0, 12)];
     const calculatedX = CONSTANTS.MEASUREMENTS.NUM_COLUMNS * left;
     const x = calculatedX > 0 ? calculatedX - 1 : calculatedX;
     const startingPoint = document.getElementById(`${x}-${y}`);
@@ -217,12 +217,20 @@ const addLog = (timestamp) => {
  * - Second checks if the car is moving right and has reached the right, then it de-spawns it, and re-spawns another car
  * - Third, if it's in the process of moving, it removes the image from it's current node, and adds it to the node in it's path, then increment's it's x coordinate in the movingCars array
  */
-const moveCars = () => {
+const moveCars = (timestamp, frogInstance) => {
+    console.log(document.getElementById("lives").innerHTML);
     if (movingCars.length > 0) {
         let index = 0;
         while (index < movingCars.length) {
             const eachCar = movingCars[index];
             const [x, y, left] = eachCar;
+            const frogx = frogInstance ? Number.parseInt(frogInstance.getAttribute("x")) :-1; 
+            const frogy = frogInstance ? Number.parseInt(frogInstance.getAttribute("y")) :-1;
+            if (x == frogx && y == frogy) {
+                console.log("hit by a car");
+                resetFrog(frogInstance);
+                loseLife();
+            }
             if (left && x === 0) {
                 const currentNode = document.getElementById(`${x}-${y}`);
                 currentNode.removeChild(currentNode.childNodes[0]);
@@ -250,7 +258,7 @@ const moveCars = () => {
         }
     }
     setTimeout(() => {
-        window.requestAnimationFrame(moveCars);
+        window.requestAnimationFrame((time) => moveCars(time, frogInstance));
     }, [30]);
 };
 
@@ -335,6 +343,26 @@ const incrementScore = () => {
     scoreSpan.innerText = score;
 };
 
+/*
+* Identifies when the frog reaches the end and sets ending screen
+*/
+const reachedEnd = (frogInstance) => {
+    const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+
+    if (fromI === 1) {
+        console.log("Reached the end")
+        endingScreen();
+        return true
+    }
+}
+
+const endingScreen = () => {
+    document.getElementById("end-screen").style.display = "block";
+    document.getElementById("game-board").style.display = "none";
+}
+
 /**
  * Moves the frog from `fromI` and `fromJ` to `toI` and `toJ`
  *
@@ -363,10 +391,90 @@ const moveFrog = (fromI, fromJ, toI, toJ, frogInstance) => {
             frogInstance.setAttribute("onLog", false);
         }
     }
+    waterJump(frogInstance);
 };
 
-//#endregion
+/**
+ * Removes life and resets frog to the beginning when water is touched
+ * 
+ * @param {HTMLImageElement} frogInstance 
+ */
+const waterJump = (frogInstance) => {
+    const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+    if (CONSTANTS.ROW_VALUES.WATER.includes(fromI)) {
+        console.log("touched water");
+        resetFrog(frogInstance);
+        loseLife();
+    }
 
+}
+
+/**
+ * Moves frog to the beginning
+ * 
+ * @param {HTMLImageElement} frogInstance 
+ */
+const resetFrog = (frogInstance) => {
+    const fromI = Number.parseInt(frog.getAttribute("y"), 10);
+    const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+    moveFrog(fromI, fromJ, CONSTANTS.IMPORTANT_COORDS.START_Y, CONSTANTS.IMPORTANT_COORDS.START_X, frogInstance);
+    
+}
+
+/**
+ * Moves frog to the beginning and updates lives var when it loses a life
+ * 
+ * @param {HTMLImageElement} frogInstance 
+ */
+function loseLife() {
+    const lives = document.getElementById("lives");
+    lives.innerHTML = Number.parseInt(lives.innerHTML) - 1;
+    console.log("lost life");
+    updateLives(Number.parseInt(lives.innerHTML));
+
+    if (Number.parseInt(lives.innerHTML) < 1){
+        console.log(lives.innerHTML, typeof lives.innerHTML);
+        updateLives(0);
+        updateLives(3);
+        document.getElementById("start-screen").style.display = "block";
+        document.getElementById("game-board").style.display = "none";
+        lives.innerHTML = 3;  
+    }
+}
+
+function updateLives(lives){
+    console.log("update lives");
+    var imgFrog = document.createElement("img");
+    imgFrog.setAttribute("src", "images/frog.png");
+    imgFrog.style.height = "3.9vh";
+    imgFrog.style.width = "3vw";
+    const clone = imgFrog.cloneNode(true);
+    const clone2 = imgFrog.cloneNode(true);
+    var text = document.createTextNode(" ");
+    document.getElementById("frogger-0").style.color = "#ffeab0";
+    if (lives==3){
+        document.getElementById("frogger-0").appendChild(text);
+        document.getElementById("frogger-0").appendChild(imgFrog);
+        document.getElementById("frogger-0").appendChild(clone);
+        document.getElementById("frogger-0").appendChild(clone2);
+    }
+    else if(lives==2){  
+        document.getElementById("frogger-0").innerHTML="";
+        document.getElementById("frogger-0").appendChild(text);
+        document.getElementById("frogger-0").appendChild(imgFrog);
+        document.getElementById("frogger-0").appendChild(clone);
+    }
+    else if(lives==1){
+       document.getElementById("frogger-0").innerHTML="";   
+       document.getElementById("frogger-0").appendChild(text);
+       document.getElementById("frogger-0").appendChild(imgFrog);
+    }
+    else{
+        document.getElementById("frogger-0").innerHTML="";  
+    }
+}
 //#region Listeners
 
 /**
@@ -382,6 +490,9 @@ window.onkeydown = (keyEvent) => {
         case "ArrowDown": {
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            frog.setAttribute("src", "images/frog-down.png");
+            frog.style.height = "3.9vh";
+            frog.style.width = "2.9vw";
             if (fromI < 24) {
                 moveFrog(fromI, fromJ, fromI + 1, fromJ, frog);
             }
@@ -390,6 +501,10 @@ window.onkeydown = (keyEvent) => {
         case "ArrowUp": {
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            frog.setAttribute("src", "images/frog.png");
+            frog.style.height = "3.9vh";
+            frog.style.width = "3vw";
+            reachedEnd(frog);
             if (fromI > 0) {
                 moveFrog(fromI, fromJ, fromI - 1, fromJ, frog);
             }
@@ -398,6 +513,9 @@ window.onkeydown = (keyEvent) => {
         case "ArrowLeft": {
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            frog.setAttribute("src", "images/frog-left.png");
+            frog.style.height = "3.9vh";
+            frog.style.width = "3vw";
             if (fromJ > 0) {
                 moveFrog(fromI, fromJ, fromI, fromJ - 1, frog);
             }
@@ -406,6 +524,9 @@ window.onkeydown = (keyEvent) => {
         case "ArrowRight": {
             const fromI = Number.parseInt(frog.getAttribute("y"), 10);
             const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
+            frog.setAttribute("src", "images/frog-right.png");
+            frog.style.height = "3.9vh";
+            frog.style.width = "2.9vw";
             if (fromJ < 24) {
                 moveFrog(fromI, fromJ, fromI, fromJ + 1, frog);
             }
@@ -420,6 +541,7 @@ window.onkeydown = (keyEvent) => {
 window.onload = () => {
     document.getElementById("game-board").style.display = "none";
     const frog = createFrog();
+    updateLives(3);
     for (let i = 0; i < CONSTANTS.MEASUREMENTS.NUM_ROWS; i++) {
         for (let j = 0; j < CONSTANTS.MEASUREMENTS.NUM_COLUMNS; j++) {
             const row = document.getElementById(`frogger-${i}`);
@@ -433,9 +555,15 @@ window.onload = () => {
     frog.setAttribute("x", CONSTANTS.IMPORTANT_COORDS.START_X);
     frog.setAttribute("y", CONSTANTS.IMPORTANT_COORDS.START_Y);
     startingCoord.appendChild(frog);
+    
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
     window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+    window.requestAnimationFrame(addCar);
+
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);
     window.requestAnimationFrame(addLog);

@@ -73,3 +73,16 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+#end-screen {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    background-color: black;
+    background-image: url(images/toader-end-screen.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: none;
+}
