@@ -403,8 +403,10 @@ const waterJump = (frogInstance) => {
     const frog = document.getElementById(CONSTANTS.OBJECTS.FROG_ID);
     const fromI = Number.parseInt(frog.getAttribute("y"), 10);
     const fromJ = Number.parseInt(frog.getAttribute("x"), 10);
-    if (CONSTANTS.ROW_VALUES.WATER.includes(fromI)) {
-        console.log("touched water");
+    if (
+        CONSTANTS.ROW_VALUES.WATER.includes(fromI) &&
+        frogInstance.getAttribute("onLog") === "false"
+    ) {
         resetFrog(frogInstance);
         loseLife();
     }
