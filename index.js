@@ -147,6 +147,7 @@ const createFrog = () => {
     frog.style.height = "3.9vh";
     frog.style.width = "3vw";
     frog.style.position = "relative";
+    frog.setAttribute("onLog", false);
     return frog;
 };
 
